@@ -1,0 +1,11 @@
+Analyzing my_party...                                           
+
+  error • Undefined class 'EventController' • lib/features/events/views/event_detail_screen.dart:19:11 • undefined_class
+  error • The name 'EventController' isn't a type, so it can't be used as a type argument • lib/features/events/views/event_detail_screen.dart:19:54 • non_type_as_type_argument
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/events/views/event_task_add_screen.dart:91:17 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/incomes/views/income_add_screen.dart:46:17 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/incomes/views/income_add_screen.dart:114:9 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/tasks/views/task_add_screen.dart:48:17 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/tasks/views/task_add_screen.dart:103:17 • deprecated_member_use
+
+7 issues found. (ran in 2.2s)

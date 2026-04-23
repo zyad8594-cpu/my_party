@@ -1,0 +1,36 @@
+Analyzing my_party...                                           
+
+   info • Empty catch block • lib/core/utils/bool_toolse.dart:5:40 • empty_catches
+   info • Empty catch block • lib/core/utils/bool_toolse.dart:12:18 • empty_catches
+   info • Empty catch block • lib/core/utils/bool_toolse.dart:21:40 • empty_catches
+   info • Empty catch block • lib/core/utils/bool_toolse.dart:28:18 • empty_catches
+   info • Empty catch block • lib/core/utils/list_tolse.dart:19:18 • empty_catches
+   info • Empty catch block • lib/core/utils/list_tolse.dart:23:43 • empty_catches
+   info • Empty catch block • lib/core/utils/list_tolse.dart:36:18 • empty_catches
+   info • Empty catch block • lib/core/utils/list_tolse.dart:40:43 • empty_catches
+   info • Empty catch block • lib/core/utils/list_tolse.dart:59:18 • empty_catches
+   info • Empty catch block • lib/core/utils/list_tolse.dart:63:56 • empty_catches
+   info • Empty catch block • lib/core/utils/list_tolse.dart:82:18 • empty_catches
+   info • Empty catch block • lib/core/utils/list_tolse.dart:86:56 • empty_catches
+   info • Empty catch block • lib/core/utils/map_toolse.dart:12:18 • empty_catches
+   info • Empty catch block • lib/core/utils/map_toolse.dart:16:47 • empty_catches
+   info • Empty catch block • lib/core/utils/map_toolse.dart:29:18 • empty_catches
+   info • Empty catch block • lib/core/utils/map_toolse.dart:33:47 • empty_catches
+   info • Empty catch block • lib/core/utils/number_toolse.dart:18:18 • empty_catches
+   info • Empty catch block • lib/core/utils/number_toolse.dart:40:18 • empty_catches
+   info • Empty catch block • lib/core/utils/status.dart:195:21 • empty_catches
+   info • Empty catch block • lib/core/utils/string_toolse.dart:55:42 • empty_catches
+   info • Empty catch block • lib/core/utils/string_toolse.dart:62:18 • empty_catches
+   info • Empty catch block • lib/core/utils/string_toolse.dart:71:18 • empty_catches
+   info • Empty catch block • lib/core/utils/string_toolse.dart:80:42 • empty_catches
+   info • Empty catch block • lib/core/utils/string_toolse.dart:87:18 • empty_catches
+   info • Unnecessary use of 'toList' in a spread • lib/features/admin/views/system_users_screen.dart:184:16 • unnecessary_to_list_in_spreads
+   info • Unnecessary override • lib/features/clients/controller/client_controller.dart:217:8 • unnecessary_overrides
+   info • Unnecessary use of string interpolation • lib/features/events/widgets/event_detail_widgets/event_tabs/event_budget_tab.dart:263:21 • unnecessary_string_interpolations
+   info • Empty catch block • lib/features/events/widgets/event_detail_widgets/event_tabs/event_budget_tab.dart:511:15 • empty_catches
+   info • Unnecessary use of string interpolation • lib/features/reports/views/reports_screen.dart:198:50 • unnecessary_string_interpolations
+   info • Unnecessary use of string interpolation • lib/features/reports/views/reports_screen.dart:199:50 • unnecessary_string_interpolations
+   info • Unnecessary use of string interpolation • lib/features/reports/views/reports_screen.dart:200:48 • unnecessary_string_interpolations
+   info • Unnecessary use of string interpolation • lib/features/reports/views/reports_screen.dart:201:48 • unnecessary_string_interpolations
+
+32 issues found. (ran in 2.7s)

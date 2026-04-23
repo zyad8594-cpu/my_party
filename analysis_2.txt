@@ -1,0 +1,6 @@
+Analyzing my_party...                                           
+
+   info • Statements in an if should be enclosed in a block • lib/features/events/views/event_detail_screen.dart:186:9 • curly_braces_in_flow_control_structures
+   info • Unnecessary use of 'toList' in a spread • lib/features/events/views/event_detail_screen.dart:232:71 • unnecessary_to_list_in_spreads
+
+2 issues found. (ran in 2.9s)
