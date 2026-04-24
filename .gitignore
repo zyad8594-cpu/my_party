@@ -87,3 +87,4 @@ test_map.dart
 test_empty.dart
 add_dires_to_gitignore
 generate_firebase_backend.py
+remove_dire_from_git
