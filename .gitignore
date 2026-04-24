@@ -62,7 +62,6 @@ app.*.map.json
 my-party-bf6e0-firebase-adminsdk-fbsvc-9de1056702.json
 my-party-bf6e0-774d4760ac11.json
 backend/config/serviceAccountKey.json
-backend/node_modules/*
 backend/node_modules
 lib_old/
 lib_old_backend/
