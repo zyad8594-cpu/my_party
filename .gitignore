@@ -66,3 +66,4 @@ backend/node_modules/*
 backend/node_modules
 lib_old/
 lib_old_backend/
+sample_reports/
