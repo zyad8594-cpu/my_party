@@ -34,7 +34,7 @@ extension SortedList<T> on Iterable<T> {
 
 class ListTools 
 {
-  static List<T> tryParse<T, K>(value, {List<T> defaultV = const [], K? keys})
+  static List<T> tryParse<T, K>(dynamic value, {List<T> defaultV = const [], K? keys})
   {
     if((value is Map || value is List) && keys != null)
     {
@@ -51,7 +51,7 @@ class ListTools
     return defaultV;
   }
 
-  static List<T> parse<T, K>(value, {List<T>? defaultV, K? keys})
+  static List<T> parse<T, K>(dynamic value, {List<T>? defaultV, K? keys})
   {
     if((value is Map || value is List) && keys != null)
     {

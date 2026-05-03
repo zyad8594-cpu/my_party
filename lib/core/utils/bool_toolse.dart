@@ -1,6 +1,6 @@
 class BoolTools 
 {
-  static bool tryParse<K>(value, {bool defaultV = false, K? keys})
+  static bool tryParse<K>(dynamic value, {bool defaultV = false, K? keys})
   {
     try{ return value as bool;}catch(e){null;}
     if(value is Map || value is List)
@@ -16,7 +16,7 @@ class BoolTools
     return defaultV;
   }
 
-  static bool parse<K>(value, {bool? defaultV, K? keys}) 
+  static bool parse<K>(dynamic value, {bool? defaultV, K? keys}) 
   {
     try{ return value as bool;}catch(e){null;}
     if(value is Map || value is List)

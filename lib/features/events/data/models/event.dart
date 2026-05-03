@@ -64,7 +64,7 @@ class Event extends Equatable {
     this.cancelledTasks = 0.0,
   });
 
-  factory Event.fromJson(json) 
+  factory Event.fromJson(dynamic json) 
   {
     json = json is Map<String, dynamic> ? json : {};
     var isDeleted = BoolTools.tryParse(json, keys: ['is_deleted', 'isDeleted']);

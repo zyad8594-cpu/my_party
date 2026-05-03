@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart' show ScrollController;
+import 'package:flutter/widgets.dart' show ScrollController, Curves;
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:get/get.dart';
 import '../../../../core/api/api_result.dart';
 import '../../../../core/utils/utils.dart' show MyPUtils;
@@ -9,6 +10,8 @@ abstract class BaseGenericController<T> extends GetxController
   final isLoading = false.obs;
   final searchQuery = ''.obs;
   final scrollController = ScrollController();
+  final showScrollToTop = false.obs;
+  final showHeader = true.obs;
 
   /// Repository must be provided by sub-classes
   dynamic get repository;
@@ -16,8 +19,35 @@ abstract class BaseGenericController<T> extends GetxController
   @override
   void onInit() {
     super.onInit();
+    scrollController.addListener(_scrollListener);
     fetchAll();
-   
+  }
+
+  void _scrollListener() {
+    if (!scrollController.hasClients) return;
+    try {
+      if (scrollController.offset > 300 && !showScrollToTop.value) {
+        showScrollToTop.value = true;
+      } else if (scrollController.offset <= 300 && showScrollToTop.value) {
+        showScrollToTop.value = false;
+      }
+
+      if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        if (showHeader.value) showHeader.value = false;
+      } else if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
+        if (!showHeader.value) showHeader.value = true;
+      }
+    } catch (_) {}
+  }
+
+  void scrollToTop() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   Future<void> fetchAll({bool force = false}) async {
@@ -79,6 +109,7 @@ abstract class BaseGenericController<T> extends GetxController
 
   @override
   void onClose() {
+    scrollController.removeListener(_scrollListener);
     scrollController.dispose();
     super.onClose();
   }

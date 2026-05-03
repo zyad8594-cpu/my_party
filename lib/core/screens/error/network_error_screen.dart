@@ -24,7 +24,8 @@ class NetworkErrorScreen extends StatelessWidget {
           onRetry: () async {
             // التحقق يدوياً عند الضغط على إعادة المحاولة
             final connectivityResult = await Connectivity().checkConnectivity();
-            if (connectivityResult != ConnectivityResult.none) {
+            // if (connectivityResult != ConnectivityResult.none) {
+            if (connectivityResult.isNotEmpty && connectivityResult.any((result) => result == ConnectivityResult.wifi || result == ConnectivityResult.mobile)) {
               Get.back();
             } else {
               MyPUtils.showSnackbar(

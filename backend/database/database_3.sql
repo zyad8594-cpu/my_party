@@ -1,11 +1,9 @@
-DROP DATABASE IF EXISTS `my_party_4`;
-
-
-CREATE DATABASE IF NOT EXISTS `my_party_4`
-    DEFAULT CHARACTER SET utf8mb4 -- نوع الترميز
-    COLLATE utf8mb4_general_ci; -- نوع الترتيب
-USE `my_party_4`;
-
+-- DROP DATABASE IF EXISTS `my_party_4`;
+-- CREATE DATABASE IF NOT EXISTS `my_party_4`
+--     DEFAULT CHARACTER SET utf8mb4 -- نوع الترميز
+--     COLLATE utf8mb4_general_ci; -- نوع الترتيب
+-- USE `my_party_4`;
+-- END INIT
 
 -- =====================================================
 -- إنشاء الجداول الأساسية
@@ -13,25 +11,26 @@ USE `my_party_4`;
 
 
 -- جدول الأدوار (تم إضافة عمود deleted_at)
-CREATE TABLE IF NOT EXISTS `Roles` (
+CREATE TABLE IF NOT EXISTS `Roles`(
     `role_name` VARCHAR(50) NOT NULL PRIMARY KEY, -- اسم الدور
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- تاريخ إنشاء الدور
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP, -- تاريخ تحديث الدور
     `deleted_at` TIMESTAMP NULL DEFAULT NULL -- تاريخ حذف الدور
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+    -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Roles`
 
 -- إضافة الأدوار
-INSERT IGNORE INTO `Roles` (`role_name`) VALUES
+-- START INSERT IGNORE INTO `Roles`(1)
+INSERT IGNORE INTO `Roles`(`role_name`) VALUES
     ('admin'), ('coordinator'), ('supplier');
-
+-- END INSERT IGNORE INTO `Roles`(1)
 
 -- جدول تفاصيل الأدوار (الحقول المسموح بها لكل دور)
-CREATE TABLE IF NOT EXISTS `Role_Details` (
+CREATE TABLE IF NOT EXISTS `Role_Details`(
     `detail_name` VARCHAR(255) NOT NULL, -- اسم التفصيل
     `role_name` VARCHAR(50) NOT NULL, -- اسم الدور
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- تاريخ إنشاء التفصيل
@@ -42,13 +41,14 @@ CREATE TABLE IF NOT EXISTS `Role_Details` (
     INDEX `idx_role_name` (`role_name`) -- فهرس على اسم الدور
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Role_Details`
 
 -- إضافة التفاصيل لكل دور
-INSERT IGNORE INTO `Role_Details` (`detail_name`, `role_name`) VALUES
+-- START INSERT IGNORE INTO `Role_Details`(1)
+INSERT IGNORE INTO `Role_Details`(`detail_name`, `role_name`) VALUES
     ('address', 'supplier'), 
     ('notes', 'supplier'),
     ('company_name', 'supplier'),
@@ -59,23 +59,24 @@ INSERT IGNORE INTO `Role_Details` (`detail_name`, `role_name`) VALUES
     ('city', 'coordinator'),
     ('bio', 'coordinator'),
     ('experience_years', 'coordinator');
-
+-- END INSERT IGNORE INTO `Role_Details`(1)
 
 -- جدول الصلاحيات
-CREATE TABLE IF NOT EXISTS `Permissions` (
+CREATE TABLE IF NOT EXISTS `Permissions`(
     `permission_name` VARCHAR(100) NOT NULL PRIMARY KEY, -- اسم الصلاحية
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- تاريخ إنشاء الصلاحية
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP, -- تاريخ تحديث الصلاحية
     `deleted_at` TIMESTAMP NULL DEFAULT NULL -- تاريخ حذف الصلاحية
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Permissions`
 
 -- إضافة الصلاحيات
-INSERT IGNORE INTO `Permissions` (`permission_name`) VALUES
+-- START INSERT IGNORE INTO `Permissions`(1)
+INSERT IGNORE INTO `Permissions`(`permission_name`) VALUES
     ('view_admin_user'), ('create_admin_user'), ('edit_admin_user'), ('delete_admin_user'),
     ('view_coordinator_user'), ('create_coordinator_user'), ('edit_coordinator_user'), ('delete_coordinator_user'),
     ('view_supplier_user'), ('create_supplier_user'), ('edit_supplier_user'), ('delete_supplier_user'),
@@ -87,10 +88,10 @@ INSERT IGNORE INTO `Permissions` (`permission_name`) VALUES
     ('view_event'), ('create_event'), ('edit_event'), ('delete_event'),
     ('view_income'), ('create_income'), ('edit_income'), ('delete_income'),
      ('view_reports');
-
+-- END INSERT IGNORE INTO `Permissions`(1)
 
 -- جدول صلاحيات الأدوار
-CREATE TABLE IF NOT EXISTS `Role_Permissions` (
+CREATE TABLE IF NOT EXISTS `Role_Permissions`(
     `role_name` VARCHAR(50) NOT NULL, -- اسم الدور
     `permission_name` VARCHAR(100) NOT NULL, -- اسم الصلاحية
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- تاريخ إنشاء الصلاحية
@@ -102,20 +103,22 @@ CREATE TABLE IF NOT EXISTS `Role_Permissions` (
     INDEX `idx_permission_name` (`permission_name`) -- فهرس على اسم الصلاحية
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Role_Permissions`
 
 -- إضافة كل الصلاحيات للادمن
-INSERT IGNORE INTO `Role_Permissions` (`role_name`, `permission_name`)
+-- START INSERT IGNORE INTO `Role_Permissions`(1)
+INSERT IGNORE INTO `Role_Permissions`(`role_name`, `permission_name`)
     SELECT r.`role_name`, p.`permission_name`
         FROM `Roles` r CROSS JOIN `Permissions` p
         WHERE r.`role_name` = 'admin' AND p.`deleted_at` IS NULL;
-
+-- END INSERT IGNORE INTO `Role_Permissions`(1)
 
 -- إضافة الصلاحيات لكل دور
-INSERT IGNORE INTO `Role_Permissions` (`role_name`, `permission_name`)
+-- START INSERT IGNORE INTO `Role_Permissions`(2)
+INSERT IGNORE INTO `Role_Permissions`(`role_name`, `permission_name`)
     VALUES
        
         ('coordinator', 'create_client'), ('coordinator', 'edit_client'), ('coordinator', 'delete_client'),
@@ -124,10 +127,10 @@ INSERT IGNORE INTO `Role_Permissions` (`role_name`, `permission_name`)
 
 
         ('supplier', 'create_supplier_user'), ('supplier', 'edit_supplier_user'), ('supplier', 'delete_supplier_user');
-
+-- END INSERT IGNORE INTO `Role_Permissions`(2)
 
 -- جدول المستخدمين الأساسي
-CREATE TABLE IF NOT EXISTS `Users` (
+CREATE TABLE IF NOT EXISTS `Users`(
     `user_id` INT PRIMARY KEY AUTO_INCREMENT, -- رقم المستخدم
     `role_name` VARCHAR(50) NOT NULL, -- اسم الدور
 
@@ -148,10 +151,10 @@ CREATE TABLE IF NOT EXISTS `Users` (
     INDEX `idx_is_active` (`is_active`) -- فهرس على حالة المستخدم
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Users`
 
 -- جدول صلاحيات المستخدم
 CREATE TABLE IF NOT EXISTS `User_Permissions`(
@@ -166,10 +169,10 @@ CREATE TABLE IF NOT EXISTS `User_Permissions`(
         FOREIGN KEY(`permission_name`) REFERENCES `Permissions`(`permission_name`) ON DELETE CASCADE ON UPDATE CASCADE
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `User_Permissions`
 
 -- جدول قيم تفاصيل المستخدم
 CREATE TABLE IF NOT EXISTS `User_Detail_Values` (
@@ -190,10 +193,10 @@ CREATE TABLE IF NOT EXISTS `User_Detail_Values` (
     INDEX `idx_user_id` (`user_id`) -- فهرس على معرف المستخدم
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `User_Detail_Values`
 
 -- جدول المستخدمين الأساسي
 CREATE TABLE IF NOT EXISTS `Clients` (
@@ -218,10 +221,10 @@ CREATE TABLE IF NOT EXISTS `Clients` (
    
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Clients`
 
 -- جدول الأحداث (Events)
 CREATE TABLE IF NOT EXISTS `Events` (
@@ -247,10 +250,10 @@ CREATE TABLE IF NOT EXISTS `Events` (
     FOREIGN KEY (`coordinator_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE -- مفتاح خارجي عند حذف المنسق يتم حذف الحدث
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Events`
 
 -- جدول الإيرادات
 CREATE TABLE IF NOT EXISTS `Incomes` (
@@ -267,10 +270,10 @@ CREATE TABLE IF NOT EXISTS `Incomes` (
     FOREIGN KEY (`event_id`) REFERENCES `Events`(`event_id`) ON DELETE CASCADE -- مفتاح خارجي عند حذف الحدث يتم حذف الإيراد
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Incomes`
 
 -- جدول الخدمات
 CREATE TABLE IF NOT EXISTS `Services` (
@@ -282,10 +285,10 @@ CREATE TABLE IF NOT EXISTS `Services` (
     `deleted_at` TIMESTAMP NULL DEFAULT NULL
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Services`
 
 -- جدول خدمات الموردين
 CREATE TABLE IF NOT EXISTS `Supplier_Services` (
@@ -299,10 +302,10 @@ CREATE TABLE IF NOT EXISTS `Supplier_Services` (
     FOREIGN KEY (`service_id`) REFERENCES `Services`(`service_id`) ON DELETE CASCADE -- مفتاح خارجي عند حذف الخدمة يتم حذف الخدمة
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Supplier_Services`
 
 -- جدول المهام
 CREATE TABLE IF NOT EXISTS `Task_Assigns` (
@@ -341,8 +344,8 @@ CREATE TABLE IF NOT EXISTS `Task_Assigns` (
     INDEX `idx_user_assign_id` (`user_assign_id`),
     INDEX `idx_coordinator_id` (`coordinator_id`),
     INDEX `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+    ) ENGINE=InnoDB   ;
+-- END CREATE TABLE IF NOT EXISTS `Task_Assigns`
 
 -- جدول تقييم المهام
 CREATE TABLE IF NOT EXISTS `Ratings_Task_Assign` (
@@ -367,10 +370,10 @@ CREATE TABLE IF NOT EXISTS `Ratings_Task_Assign` (
     CONSTRAINT `check_different_users` CHECK (`user_assign_id` != `coordinator_id`)
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
-
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Ratings_Task_Assign`
 
 -- جدول الإشعارات
 CREATE TABLE IF NOT EXISTS `Notifications` (
@@ -386,9 +389,10 @@ CREATE TABLE IF NOT EXISTS `Notifications` (
     FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE -- مفتاح خارجي عند حذف المستخدم يتم حذف الإشعار
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Notifications`
 
 CREATE TABLE IF NOT EXISTS `Service_Requests` (
         `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -402,9 +406,10 @@ CREATE TABLE IF NOT EXISTS `Service_Requests` (
         FOREIGN KEY (`supplier_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE
     )
     ENGINE=InnoDB -- نوع المحرك
-    DEFAULT -- الافتراضي
-    CHARSET=utf8mb4 -- نوع الترميز
-    COLLATE=utf8mb4_general_ci; -- نوع الترتيب
+     -- الافتراضي
+     -- نوع الترميز
+    ; -- نوع الترتيب
+-- END CREATE TABLE IF NOT EXISTS `Service_Requests`
 
 -- إنشاء جدول تذكيرات المهام
 CREATE TABLE IF NOT EXISTS `Task_Reminders` (
@@ -424,7 +429,8 @@ CREATE TABLE IF NOT EXISTS `Task_Reminders` (
     INDEX `idx_task_assign` (`task_assign_id`),
     INDEX `idx_user` (`user_id`),
     INDEX `idx_active` (`is_active`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    ) ENGINE=InnoDB   ;
+-- END CREATE TABLE IF NOT EXISTS `Task_Reminders`
 
 CREATE TABLE IF NOT EXISTS `User_FCM_Tokens` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -436,19 +442,21 @@ CREATE TABLE IF NOT EXISTS `User_FCM_Tokens` (
     FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE,
     CONSTRAINT `uc_user_token` UNIQUE (`user_id`, `token`(255)),
     INDEX `idx_user_fcm` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+    ) ENGINE=InnoDB   ;
+-- END CREATE TABLE IF NOT EXISTS `User_FCM_Tokens`
 
 
 -- =====================================================
 -- إنشاء الدوال (Functions)
 -- =====================================================
+-- CHARSET utf8mb4 COLLATE utf8mb4_general_ci
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_concat_error_msg`(
-        IN `p_error_msg` TEXT CHARSET utf8mb4 COLLATE utf8mb4_general_ci, 
-        IN `p_original_msg` TEXT CHARSET utf8mb4 COLLATE utf8mb4_general_ci
-    ) RETURNS TEXT CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC NO SQL
+DROP FUNCTION IF EXISTS `fn_concat_error_msg`$$
+CREATE FUNCTION `fn_concat_error_msg`(
+         `p_error_msg` TEXT , 
+         `p_original_msg` TEXT 
+    ) RETURNS TEXT  DETERMINISTIC NO SQL
     BEGIN 
         RETURN IF(p_error_msg IS NULL OR p_error_msg = '', 
             p_original_msg, 
@@ -461,12 +469,13 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_concat_error_msg`(
             )
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_concat_error_msg`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fun_role_has_detail`(
-        `p_detail_name` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
-        `p_role_name` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_general_ci
+DROP FUNCTION IF EXISTS `fun_role_has_detail`$$
+CREATE FUNCTION `fun_role_has_detail`(
+        `p_detail_name` VARCHAR(255) ,
+        `p_role_name` VARCHAR(50) 
     ) RETURNS BOOLEAN DETERMINISTIC READS SQL DATA
     BEGIN 
         RETURN EXISTS (
@@ -474,12 +483,13 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fun_role_has_detail`(
             WHERE `detail_name` = p_detail_name AND `role_name` = p_role_name
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fun_role_has_detail`
 
 DELIMITER $$
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_role_has_permission`(
-    `p_role_name` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_general_ci, 
-    `p_permission_name` VARCHAR(100) CHARSET utf8mb4 COLLATE utf8mb4_general_ci
+DROP FUNCTION IF EXISTS `fn_role_has_permission`$$
+CREATE FUNCTION `fn_role_has_permission`(
+    `p_role_name` VARCHAR(50) , 
+    `p_permission_name` VARCHAR(100) 
     ) RETURNS BOOLEAN DETERMINISTIC READS SQL DATA SQL SECURITY DEFINER
     BEGIN
         RETURN EXISTS(
@@ -487,23 +497,25 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_role_has_permission`(
             WHERE rp.`role_name` = p_role_name AND rp.`permission_name` = p_permission_name
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_role_has_permission`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_role_exists`(
-    `p_role_name` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_general_ci
+DROP FUNCTION IF EXISTS `fn_role_exists`$$
+CREATE FUNCTION `fn_role_exists`(
+    `p_role_name` VARCHAR(50) 
     ) RETURNS BOOLEAN DETERMINISTIC READS SQL DATA
     BEGIN
         RETURN EXISTS(
             SELECT 1 FROM `Roles` WHERE `role_name` = p_role_name AND `deleted_at` IS NULL
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_role_exists`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_has_role`(
+DROP FUNCTION IF EXISTS `fn_user_has_role`$$
+CREATE FUNCTION `fn_user_has_role`(
     `p_user_id` INT,
-    `p_role_name` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_general_ci 
+    `p_role_name` VARCHAR(50)  
     ) RETURNS BOOLEAN DETERMINISTIC READS SQL DATA SQL SECURITY DEFINER
     BEGIN
         RETURN EXISTS(
@@ -511,12 +523,13 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_has_role`(
             WHERE `user_id` = p_user_id AND `role_name` = p_role_name AND `deleted_at` IS NULL
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_user_has_role`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_get_rolename`(
+DROP FUNCTION IF EXISTS `fn_user_get_rolename`$$
+CREATE FUNCTION `fn_user_get_rolename`(
         `p_user_conditions` JSON
-    ) RETURNS VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC READS SQL DATA
+    ) RETURNS VARCHAR(50)  DETERMINISTIC READS SQL DATA
     BEGIN
         DECLARE v_user_id INT ;
         DECLARE v_full_name VARCHAR(255);
@@ -558,13 +571,14 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_get_rolename`(
         END IF;
         RETURN v_role_name;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_user_get_rolename`
 
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_has_detail`(
+DROP FUNCTION IF EXISTS `fn_user_has_detail`$$
+CREATE FUNCTION `fn_user_has_detail`(
     `p_user_conditions` JSON,
-    `p_detail_name` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci 
+    `p_detail_name` VARCHAR(255)  
     ) RETURNS BOOLEAN NOT DETERMINISTIC READS SQL DATA
     BEGIN
         DECLARE v_role_name VARCHAR(50);
@@ -582,13 +596,14 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_has_detail`(
             AND rd.`deleted_at` IS NULL
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_user_has_detail`
 
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_detail_exists`(
+DROP FUNCTION IF EXISTS `fn_user_detail_exists`$$
+CREATE FUNCTION `fn_user_detail_exists`(
     `p_user_id` INT,
-    `p_detail_name` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci
+    `p_detail_name` VARCHAR(255) 
     ) RETURNS BOOLEAN DETERMINISTIC READS SQL DATA
     BEGIN 
         RETURN EXISTS (
@@ -596,23 +611,25 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_detail_exists`(
             WHERE `user_id` = p_user_id AND `detail_name` = p_detail_name
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_user_detail_exists`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost'  FUNCTION `fn_user_get_detail`(
+DROP FUNCTION IF EXISTS `fn_user_get_detail`$$
+CREATE FUNCTION `fn_user_get_detail`(
     `p_user_id` INT, 
-    `p_detail_name` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci
-    ) RETURNS TEXT CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC READS SQL DATA
+    `p_detail_name` VARCHAR(255) 
+    ) RETURNS TEXT  DETERMINISTIC READS SQL DATA
     BEGIN
         RETURN (
             SELECT `detail_value` FROM `User_Detail_Values`
             WHERE `user_id` = p_user_id AND `detail_name` = p_detail_name LIMIT 1
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_user_get_detail`
 
 DELIMITER $$
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_is_actived`(
+DROP FUNCTION IF EXISTS `fn_user_is_actived`$$
+CREATE FUNCTION `fn_user_is_actived`(
     `p_user_id` INT
     ) RETURNS BOOLEAN DETERMINISTIC READS SQL DATA
     BEGIN
@@ -620,10 +637,11 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_is_actived`(
             SELECT 1 FROM `Users` WHERE `user_id` = p_user_id AND `is_active` = TRUE AND `deleted_at` IS NULL
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_user_is_actived`
 
 DELIMITER $$
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_is_deleted`(
+DROP FUNCTION IF EXISTS `fn_user_is_deleted`$$
+CREATE FUNCTION `fn_user_is_deleted`(
     `p_user_id` INT
     ) RETURNS BOOLEAN DETERMINISTIC READS SQL DATA
     BEGIN
@@ -631,10 +649,11 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_user_is_deleted`(
             SELECT 1 FROM `Users` WHERE `user_id` = p_user_id AND `deleted_at` IS NOT NULL
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_user_is_deleted`
 
 DELIMITER $$
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_total_income`(
+DROP FUNCTION IF EXISTS `fn_event_total_income`$$
+CREATE FUNCTION `fn_event_total_income`(
     `p_event_id` INT
     ) RETURNS DECIMAL(10,2) DETERMINISTIC READS SQL DATA
     BEGIN
@@ -643,10 +662,11 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_total_income`(
             FROM `Incomes` WHERE `event_id` = p_event_id AND `deleted_at` IS NULL
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_event_total_income`
 
 DELIMITER $$
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_total_expenses`(
+DROP FUNCTION IF EXISTS `fn_event_total_expenses`$$
+CREATE FUNCTION `fn_event_total_expenses`(
     `p_event_id` INT
     ) RETURNS DECIMAL(10,2) DETERMINISTIC READS SQL DATA
     BEGIN
@@ -657,19 +677,21 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_total_expenses`(
             WHERE `event_id` = p_event_id AND `deleted_at` IS NULL
         );
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_event_total_expenses`
 
 DELIMITER $$
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_net_profit`(
+DROP FUNCTION IF EXISTS `fn_event_net_profit`$$
+CREATE FUNCTION `fn_event_net_profit`(
     `p_event_id` INT
     ) RETURNS DECIMAL(10,2) DETERMINISTIC READS SQL DATA
     BEGIN
         RETURN IFNULL(fn_event_total_income(p_event_id), 0) - IFNULL(fn_event_total_expenses(p_event_id), 0);
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_event_net_profit`
 
 DELIMITER $$
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_overdue_tasks`(
+DROP FUNCTION IF EXISTS `fn_event_overdue_tasks`$$
+CREATE FUNCTION `fn_event_overdue_tasks`(
     `p_event_id` INT
     ) RETURNS INT DETERMINISTIC READS SQL DATA
     BEGIN
@@ -683,14 +705,15 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_overdue_tasks`(
             AND `deleted_at` IS NULL
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_event_overdue_tasks`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_getKeyOrIndex_array`(
+DROP FUNCTION IF EXISTS `fn_getKeyOrIndex_array`$$
+CREATE FUNCTION `fn_getKeyOrIndex_array`(
     `p_index` INT, 
-    `p_key` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci, 
-    `p_keyOrIndex` ENUM('index','key') CHARSET utf8mb4 COLLATE utf8mb4_general_ci
-    ) RETURNS VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC NO SQL
+    `p_key` VARCHAR(255) , 
+    `p_keyOrIndex` ENUM('index','key') 
+    ) RETURNS VARCHAR(255)  DETERMINISTIC NO SQL
     BEGIN 
         IF p_keyOrIndex = 'index' THEN 
             RETURN CONCAT('$[', p_index, ']'); 
@@ -699,29 +722,32 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_getKeyOrIndex_array`(
         END IF; 
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid key or index'; 
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_getKeyOrIndex_array`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost'  FUNCTION `fn_array_at`(`p_keys` JSON, `p_index` INT ) 
-    RETURNS VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC READS SQL DATA
+DROP FUNCTION IF EXISTS `fn_array_at` $$
+CREATE FUNCTION `fn_array_at`(`p_keys` JSON, `p_index` INT ) 
+    RETURNS VARCHAR(255)  DETERMINISTIC READS SQL DATA
     BEGIN
         RETURN JSON_UNQUOTE(JSON_EXTRACT(p_keys, CONCAT('$[', p_index, ']')));
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_array_at`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost'  FUNCTION `fn_json_get`(`p_details` JSON, `p_key` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci)
-     RETURNS TEXT CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC READS SQL DATA
+DROP FUNCTION IF EXISTS `fn_json_get`$$
+CREATE FUNCTION `fn_json_get`(`p_details` JSON, `p_key` VARCHAR(255) )
+     RETURNS TEXT  DETERMINISTIC READS SQL DATA
     BEGIN
         RETURN JSON_UNQUOTE(JSON_EXTRACT(p_details, CONCAT('$.', p_key)));
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_json_get`
 
 DELIMITER $$ 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_get_end_date`(
+DROP FUNCTION IF EXISTS `fn_event_get_end_date`$$
+CREATE FUNCTION `fn_event_get_end_date`(
         `p_event_date` DATE,
         `p_event_duration` INT,
-        `p_event_duration_unit` ENUM('DAY', 'WEEK', 'MONTH') CHARSET utf8mb4 COLLATE utf8mb4_general_ci
+        `p_event_duration_unit` ENUM('DAY', 'WEEK', 'MONTH') 
     ) RETURNS DATE DETERMINISTIC READS SQL DATA
     BEGIN
 
@@ -729,9 +755,12 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_get_end_date`(
         ELSEIF p_event_duration_unit = 'WEEK'THEN RETURN DATE_ADD(p_event_date , INTERVAL P_event_duration WEEK);
         ELSE RETURN DATE_ADD(p_event_date , INTERVAL P_event_duration MONTH); END IF;
     END $$
+DELIMITER ; -- END CREATE FUNCTION `fn_event_get_end_date`
 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_status_is`(
-        `p_event_status` ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'DELETED') CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
+DELIMITER $$
+DROP FUNCTION IF EXISTS `fn_event_status_is`$$
+CREATE FUNCTION `fn_event_status_is`(
+        `p_event_status` ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'DELETED') ,
         `p_event_id` INT
     ) RETURNS BOOLEAN DETERMINISTIC READS SQL DATA
     BEGIN 
@@ -753,10 +782,13 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_status_is`(
             RETURN v_deleted_at IS NOT NULL;
         END IF;
     END $$
+DELIMITER ; -- END CREATE FUNCTION `fn_event_status_is`
 
-CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_get_status`(
+DELIMITER $$
+DROP FUNCTION IF EXISTS `fn_event_get_status`$$
+CREATE FUNCTION `fn_event_get_status`(
         `p_event_id` INT
-    ) RETURNS ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'OTHER') CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC READS SQL DATA
+    ) RETURNS ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'OTHER')  DETERMINISTIC READS SQL DATA
     BEGIN 
         DECLARE v_event_date DATE;
         DECLARE v_event_end_date DATE;
@@ -776,10 +808,11 @@ CREATE DEFINER = 'root'@'localhost' FUNCTION `fn_event_get_status`(
             RETURN 'COMPLETED';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_event_get_status`
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` FUNCTION `fn_get_avg_supplier_rating_for_coord`(
+DROP FUNCTION IF EXISTS `fn_get_avg_supplier_rating_for_coord`$$
+CREATE FUNCTION `fn_get_avg_supplier_rating_for_coord`(
         `p_coordinator_id` INT,
         `p_supplier_id` INT
     ) RETURNS decimal(10,2)
@@ -789,7 +822,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `fn_get_avg_supplier_rating_for_coord
             rta.user_assign_id = p_supplier_id
          );
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE FUNCTION `fn_get_avg_supplier_rating_for_coord`
 
 -- =====================================================
 -- إنشاء طرق العرض (Views)
@@ -802,6 +835,7 @@ CREATE OR REPLACE VIEW `vw_get_all_admins` AS
         `u`.*,
         (`u`.`deleted_at` IS NOT NULL) AS `is_deleted`
     FROM `Users` `u` WHERE `u`.`role_name` = 'admin';
+-- END CREATE OR REPLACE VIEW `vw_get_all_admins`
 
 -- عرض المنسقين
 CREATE OR REPLACE VIEW `vw_get_all_coordinators` AS
@@ -809,6 +843,7 @@ CREATE OR REPLACE VIEW `vw_get_all_coordinators` AS
         `u`.*,
         (`u`.`deleted_at` IS NOT NULL) AS `is_deleted`
     FROM `Users` `u` WHERE `u`.`role_name` = 'coordinator';
+-- END CREATE OR REPLACE VIEW `vw_get_all_coordinators`
 
 -- عرض الموردين
 CREATE OR REPLACE VIEW `vw_get_all_suppliers` AS
@@ -817,6 +852,7 @@ CREATE OR REPLACE VIEW `vw_get_all_suppliers` AS
         (`u`.`deleted_at` IS NOT NULL) AS `is_deleted`,
         `fn_user_get_detail`(`u`.`user_id`,'address') AS `address`
         FROM `Users` `u` WHERE `u`.`role_name` = 'supplier';
+-- END CREATE OR REPLACE VIEW `vw_get_all_suppliers`
 
 -- عرض الأحداث مع التفاصيل (استخدام الأعمدة المباشرة)
 CREATE OR REPLACE VIEW `vw_events_detailed_with_coor` AS
@@ -841,6 +877,7 @@ CREATE OR REPLACE VIEW `vw_events_detailed_with_coor` AS
         ) AS `completion_percentage`
     FROM `Events` e
      JOIN `Users` co ON e.`coordinator_id` = co.`user_id`;
+-- END CREATE OR REPLACE VIEW `vw_events_detailed_with_coor`
 
 CREATE OR REPLACE VIEW `vw_events_detailed` AS
     SELECT 
@@ -869,7 +906,8 @@ CREATE OR REPLACE VIEW `vw_events_detailed` AS
     FROM `Events` e
     LEFT JOIN `Users` co ON e.`coordinator_id` = co.`user_id`
     LEFT JOIN `Clients` c ON e.`client_id` = c.`client_id`;
-    
+-- END CREATE OR REPLACE VIEW `vw_events_detailed`
+
 -- عرض المهام الكامل (استخدام الأعمدة المباشرة)
 CREATE OR REPLACE VIEW `vw_tasks_full` AS
     SELECT 
@@ -894,6 +932,7 @@ CREATE OR REPLACE VIEW `vw_tasks_full` AS
     LEFT JOIN `Ratings_Task_Assign` r ON ta.`task_assign_id` = r.`task_assign_id`
     LEFT JOIN `Task_Reminders` rm ON ta.`task_assign_id` = rm.`task_assign_id`
     WHERE ta.`deleted_at` IS NULL;
+-- END CREATE OR REPLACE VIEW `vw_tasks_full`
 
 -- عرض الإشعارات (استخدام الأعمدة المباشرة)
 CREATE OR REPLACE VIEW `vw_notifications` AS
@@ -907,7 +946,8 @@ CREATE OR REPLACE VIEW `vw_notifications` AS
         u.`full_name` AS `recipient_name`
     FROM `Notifications` n
     LEFT JOIN `Users` u ON n.`user_id` = u.`user_id`;
-    
+-- END CREATE OR REPLACE VIEW `vw_notifications`
+
 CREATE OR REPLACE VIEW `vw_task_reminders_details` AS
     SELECT
         r.`reminder_id`,
@@ -930,6 +970,7 @@ CREATE OR REPLACE VIEW `vw_task_reminders_details` AS
     JOIN `Task_Assigns` ta ON r.`task_assign_id` = ta.`task_assign_id`
     JOIN `Events` e ON ta.`event_id` = e.`event_id`
     WHERE r.`deleted_at` IS NULL;
+-- END CREATE OR REPLACE VIEW `vw_task_reminders_details`
 
 CREATE OR REPLACE VIEW `vw_get_all_suppliers_and_services` AS
     SELECT 
@@ -969,6 +1010,7 @@ CREATE OR REPLACE VIEW `vw_get_all_suppliers_and_services` AS
             AND `ss`.`supplier_id` = `sup`.`user_id`
             
         ORDER BY `ser`.`service_id`, `sup`.`user_id`;
+-- END CREATE OR REPLACE VIEW `vw_get_all_suppliers_and_services`
 
 -- =====================================================
 -- إنشاء الإجراءات المخزنة (Stored Procedures)
@@ -976,8 +1018,8 @@ CREATE OR REPLACE VIEW `vw_get_all_suppliers_and_services` AS
 
 DELIMITER $$
 CREATE PROCEDURE `sp_set_error_msg_or_def`(
-        IN `p_error_msg` TEXT CHARSET utf8mb4 COLLATE utf8mb4_general_ci, 
-        IN `p_default_msg` TEXT CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
+        IN `p_error_msg` TEXT , 
+        IN `p_default_msg` TEXT ,
         IN `p_show_error` BOOLEAN
     ) 
     BEGIN 
@@ -989,7 +1031,7 @@ CREATE PROCEDURE `sp_set_error_msg_or_def`(
             RESIGNAL SET MESSAGE_TEXT = p_error_msg;
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_set_error_msg_or_def`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_get_user_by_id`(IN `p_user_id` INT)
@@ -1015,7 +1057,7 @@ CREATE PROCEDURE `sp_get_user_by_id`(IN `p_user_id` INT)
                 SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'دور المستخدم غير معروف';
         END CASE;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_get_user_by_id`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_get_user_by_email`(IN `p_email` VARCHAR(255))
@@ -1032,7 +1074,7 @@ CREATE PROCEDURE `sp_get_user_by_email`(IN `p_email` VARCHAR(255))
         
         CALL sp_get_user_by_id(v_user_id);
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_get_user_by_email`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_login_user`(IN `p_email` VARCHAR(255))
@@ -1060,7 +1102,7 @@ CREATE PROCEDURE `sp_login_user`(IN `p_email` VARCHAR(255))
 
         CALL sp_get_user_by_id(v_user_id);
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_login_user`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_throw_if_account_not_admin`(
@@ -1099,7 +1141,7 @@ CREATE PROCEDURE `sp_throw_if_account_not_admin`(
         --     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error_msg;
         -- END IF;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_throw_if_account_not_admin`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_create_user`(
@@ -1200,7 +1242,9 @@ CREATE PROCEDURE `sp_create_user`(
         COMMIT;
         IF p_with_out THEN CALL sp_get_user_by_id(p_user_id); END IF;
     END$$
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_user`
 
+DELIMITER $$
 CREATE PROCEDURE `sp_register`(
         IN `p_role_name` VARCHAR(50),
         IN `p_full_name` VARCHAR(255),
@@ -1225,7 +1269,7 @@ CREATE PROCEDURE `sp_register`(
             p_email, p_password, p_details, v_user_id, p_with_out
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_register`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_create_coordinator`(
@@ -1250,7 +1294,9 @@ CREATE PROCEDURE `sp_create_coordinator`(
             p_phone_number, p_is_active, p_img_url, p_email, p_password, '{}', v_user_id, p_with_out
         );
     END$$
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_coordinator`
 
+DELIMITER $$
 CREATE PROCEDURE `sp_create_supplier`(
         IN `p_full_name` VARCHAR(255),
         IN `p_phone_number` VARCHAR(20),
@@ -1307,7 +1353,7 @@ CREATE PROCEDURE `sp_create_supplier`(
         END IF;
         COMMIT;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_supplier`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_create_client`(
@@ -1390,7 +1436,7 @@ CREATE PROCEDURE `sp_create_client`(
         COMMIT;
         IF p_with_out THEN SELECT * FROM `Clients` WHERE `client_id` = v_client_id; END IF;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_client`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_update_client`(
@@ -1467,7 +1513,7 @@ CREATE PROCEDURE `sp_update_client`(
         COMMIT;
         SELECT * FROM `Clients` WHERE `client_id` = p_client_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_client`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_update_user`(
@@ -1591,7 +1637,9 @@ CREATE PROCEDURE `sp_update_user`(
         COMMIT;
         CALL sp_get_user_by_id(p_user_id);
     END$$
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_user`
 
+DELIMITER $$
 CREATE PROCEDURE `sp_update_user_byadmin`(
         IN `p_user_id` INT,
         IN `p_full_name` VARCHAR(255),
@@ -1610,7 +1658,7 @@ CREATE PROCEDURE `sp_update_user_byadmin`(
             v_email, v_pass, p_user_id, p_full_name, p_phone_number, p_img_url, p_email, p_password, p_details
         );
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_user_byadmin`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_user`(IN `p_user_id` INT)
@@ -1650,7 +1698,7 @@ CREATE PROCEDURE `sp_delete_user`(IN `p_user_id` INT)
         
         -- SELECT p_user_id AS user_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_user`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_restore_user`(IN `p_user_id` INT)
@@ -1690,7 +1738,7 @@ CREATE PROCEDURE `sp_restore_user`(IN `p_user_id` INT)
         
         SELECT p_user_id AS user_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_restore_user`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_set_user_active`(IN `p_user_id` INT, IN `p_active` BOOLEAN, IN `p_with_out` BOOLEAN)
@@ -1731,7 +1779,7 @@ CREATE PROCEDURE `sp_set_user_active`(IN `p_user_id` INT, IN `p_active` BOOLEAN,
         
         IF p_with_out THEN SELECT p_user_id AS user_id; END IF;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_set_user_active`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_add_permission_to_role`(
@@ -1760,7 +1808,7 @@ CREATE PROCEDURE `sp_add_permission_to_role`(
             CONCAT('تم إضافة الصلاحية "', p_permission_name, '" إلى دور "', p_role_name, '"')
         );
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_add_permission_to_role`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_remove_permission_from_role`(
@@ -1781,7 +1829,7 @@ CREATE PROCEDURE `sp_remove_permission_from_role`(
             CONCAT('تم إزالة الصلاحية "', p_permission_name, '" من دور "', p_role_name, '"')
         );
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_remove_permission_from_role`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_create_task`(
@@ -1908,7 +1956,9 @@ CREATE PROCEDURE `sp_create_task`(
         END IF;
         SELECT p_task_assign_id as task_assign_id;
     END$$
-    
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_task`
+
+DELIMITER $$
 CREATE PROCEDURE `sp_create_task_from_json`(
         IN `p_event_id` INT,
         IN `p_task_json` JSON,
@@ -1928,7 +1978,7 @@ CREATE PROCEDURE `sp_create_task_from_json`(
             p_task_assign_id
         );
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_task_from_json`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_create_income`(
@@ -1936,8 +1986,8 @@ CREATE PROCEDURE `sp_create_income`(
         IN `p_amount` DECIMAL(10,2),
         IN `p_description` TEXT,
         IN `p_payment_date` DATE,
-        IN `p_payment_method` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
-        IN `p_url_image` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
+        IN `p_payment_method` VARCHAR(50) ,
+        IN `p_url_image` VARCHAR(255) ,
         IN `with_out` BOOLEAN
     )
     BEGIN
@@ -1964,7 +2014,9 @@ CREATE PROCEDURE `sp_create_income`(
         END IF;
         
     END$$
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_income`
 
+DELIMITER $$
 CREATE PROCEDURE `sp_create_income_from_json`(
         IN `p_event_id` INT,
         IN `p_income_json` JSON
@@ -1981,7 +2033,7 @@ CREATE PROCEDURE `sp_create_income_from_json`(
         );
        
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_income_from_json`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_create_event`(
@@ -2025,7 +2077,7 @@ CREATE PROCEDURE `sp_create_event`(
         
         SELECT * FROM `vw_events_detailed` WHERE `event_id` = LAST_INSERT_ID();
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_event`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_update_task_status`(
@@ -2188,7 +2240,7 @@ CREATE PROCEDURE `sp_update_task_status`(
         
         COMMIT;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_task_status`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_add_task_rating`(
@@ -2264,7 +2316,7 @@ CREATE PROCEDURE `sp_add_task_rating`(
             END IF;
         END IF;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_add_task_rating`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_task_rating`(
@@ -2292,7 +2344,7 @@ CREATE PROCEDURE `sp_delete_task_rating`(
             );
         END IF;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_task_rating`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_change_password`(
@@ -2328,17 +2380,17 @@ CREATE PROCEDURE `sp_change_password`(
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'كلمة المرور القديمة غير صحيحة.';
         END IF;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_change_password`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_update_event`(
         IN `p_event_id` INT,
         IN `p_client_id` INT,
-        IN `p_event_name` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
+        IN `p_event_name` VARCHAR(255) ,
         IN `p_description` TEXT,
         IN `p_img_url` TEXT,
         IN `p_event_date` DATE,
-        IN `p_location` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
+        IN `p_location` VARCHAR(255) ,
         IN `p_budget` DECIMAL(10,2),
         IN `p_event_duration` INT,
         IN `p_event_duration_unit` ENUM('DAY', 'WEEK', 'MONTH')
@@ -2381,7 +2433,7 @@ CREATE PROCEDURE `sp_update_event`(
         );
         SELECT * FROM `vw_events_detailed` WHERE `event_id` = p_event_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_event`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_task_reminder`(
@@ -2412,7 +2464,7 @@ CREATE PROCEDURE `sp_delete_task_reminder`(
         );
         
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_task_reminder`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_all_reminders_of_task`(IN `p_task_assign_id` INT)
@@ -2437,7 +2489,7 @@ CREATE PROCEDURE `sp_delete_all_reminders_of_task`(IN `p_task_assign_id` INT)
         
         CLOSE reminders_cursor;   
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_all_reminders_of_task`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_all_ratings_of_task`(IN `p_task_assign_id` INT)
@@ -2461,7 +2513,7 @@ CREATE PROCEDURE `sp_delete_all_ratings_of_task`(IN `p_task_assign_id` INT)
         
         CLOSE ratings_cursor;   
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_all_ratings_of_task`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_task`(IN `p_task_assign_id` INT)
@@ -2512,7 +2564,7 @@ CREATE PROCEDURE `sp_delete_task`(IN `p_task_assign_id` INT)
         CALL sp_delete_all_ratings_of_task(p_task_assign_id);
         -- SELECT p_task_assign_id AS task_assign_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_task`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_all_incomes_of_event`(IN `p_event_id` INT)
@@ -2535,7 +2587,7 @@ CREATE PROCEDURE `sp_delete_all_incomes_of_event`(IN `p_event_id` INT)
         
         CLOSE incomes_cursor;   
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_all_incomes_of_event`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_all_tasks_of_event`(IN `p_event_id` INT)
@@ -2574,8 +2626,7 @@ CREATE PROCEDURE `sp_delete_all_tasks_of_event`(IN `p_event_id` INT)
                 `ta`.`deleted_at` IS NULL;
 
         END $$
-DELIMITER ;
-
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_all_tasks_of_event`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_event`(IN `p_event_id` INT)
@@ -2609,7 +2660,7 @@ CREATE PROCEDURE `sp_delete_event`(IN `p_event_id` INT)
 
         -- SELECT p_event_id AS event_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_event`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_all_events_of_coordinator`(IN `p_coordinator_id` INT)
@@ -2633,13 +2684,13 @@ CREATE PROCEDURE `sp_delete_all_events_of_coordinator`(IN `p_coordinator_id` INT
         
         CLOSE events_cursor;   
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_all_events_of_coordinator`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_create_service`(
         IN `p_user_creator_email` VARCHAR(255),
         IN `p_user_creator_pass` VARCHAR(255),
-        IN `p_service_name` VARCHAR(100) CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
+        IN `p_service_name` VARCHAR(100) ,
         IN `p_description` TEXT,
         IN `p_with_out` BOOLEAN
     ) DETERMINISTIC MODIFIES SQL DATA SQL SECURITY DEFINER 
@@ -2679,7 +2730,7 @@ CREATE PROCEDURE `sp_create_service`(
             SELECT * FROM `Services` WHERE `service_id` = v_service_id;
         END IF;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_create_service`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_update_service`(
@@ -2712,7 +2763,7 @@ CREATE PROCEDURE `sp_update_service`(
         
         SELECT * FROM `Services` WHERE `service_id` = p_service_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_service`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_service`(IN `p_service_id` INT)
@@ -2737,7 +2788,7 @@ CREATE PROCEDURE `sp_delete_service`(IN `p_service_id` INT)
         
         SELECT p_service_id AS service_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_service`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_update_income`(
@@ -2785,7 +2836,7 @@ CREATE PROCEDURE `sp_update_income`(
         
         SELECT * FROM `Incomes` WHERE `income_id` = p_income_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_income`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_delete_income`(IN `p_income_id` INT)
@@ -2819,7 +2870,7 @@ CREATE PROCEDURE `sp_delete_income`(IN `p_income_id` INT)
         
         SELECT p_income_id AS income_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_delete_income`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_update_task`( 
@@ -2889,7 +2940,7 @@ CREATE PROCEDURE `sp_update_task`(
         
         SELECT * FROM `vw_tasks_full` WHERE `task_assign_id` = p_task_assign_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_task`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_assign_service_to_supplier`(
@@ -2931,7 +2982,7 @@ CREATE PROCEDURE `sp_assign_service_to_supplier`(
             CONCAT('تم إسناد الخدمة "', v_service_name, '" إلى المورد "', v_supplier_name, '" (رقم ', p_supplier_id, ')')
         );
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_assign_service_to_supplier`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_remove_service_from_supplier`(
@@ -2964,7 +3015,7 @@ CREATE PROCEDURE `sp_remove_service_from_supplier`(
             CONCAT('تم إزالة الخدمة "', v_service_name, '" من المورد "', v_supplier_name, '" (رقم ', p_supplier_id, ')')
         );
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_remove_service_from_supplier`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_events_detailed` (
@@ -2999,7 +3050,7 @@ CREATE PROCEDURE `sp_events_detailed` (
         LEFT JOIN `Clients` c ON e.`client_id` = c.`client_id`
         WHERE e.`coordinator_id` = p_coordinator_id AND c.`coordinator_id` = p_coordinator_id;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_events_detailed`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_home_stats_coordinator`(
@@ -3026,7 +3077,7 @@ CREATE PROCEDURE `sp_home_stats_coordinator`(
             ;
             
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_home_stats_coordinator`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_home_stats_supplier`(
@@ -3051,10 +3102,10 @@ CREATE PROCEDURE `sp_home_stats_supplier`(
             ;
             
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_home_stats_supplier`
 
 DELIMITER $$
-CREATE PROCEDURE  `sp_report_stats`(
+CREATE PROCEDURE `sp_report_stats`(
         IN `p_coordinator_id` INT
     ) 
     BEGIN
@@ -3067,7 +3118,9 @@ CREATE PROCEDURE  `sp_report_stats`(
             (SELECT IFNULL(SUM(inc.`amount`), 0) FROM `Incomes` inc JOIN `Events` e ON inc.`event_id` = e.`event_id` WHERE e.`coordinator_id` = p_coordinator_id) AS total_revenue,
             (SELECT IFNULL(SUM(`cost`), 0) FROM `Task_Assigns` WHERE `coordinator_id` = p_coordinator_id) AS total_expenses;
     END $$
+DELIMITER ; -- END CREATE PROCEDURE `sp_report_stats`
 
+DELIMITER $$
 CREATE PROCEDURE `sp_monthly_income`(
         IN `p_coordinator_id` INT,
         IN `p_limit` INT
@@ -3082,7 +3135,7 @@ CREATE PROCEDURE `sp_monthly_income`(
             ORDER BY month DESC
         LIMIT p_limit;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_monthly_income`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_generate_task_reminders`()
@@ -3212,7 +3265,7 @@ CREATE PROCEDURE `sp_generate_task_reminders`()
         
         CLOSE reminder_cursor;   
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_generate_task_reminders`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_add_task_reminder`(
@@ -3255,7 +3308,7 @@ CREATE PROCEDURE `sp_add_task_reminder`(
             SELECT LAST_INSERT_ID() AS reminder_id;
         END IF;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_add_task_reminder`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_update_task_reminder`(
@@ -3299,8 +3352,7 @@ CREATE PROCEDURE `sp_update_task_reminder`(
         
         SELECT p_reminder_id AS reminder_id;
     END$$
-DELIMITER ;
-
+DELIMITER ; -- END CREATE PROCEDURE `sp_update_task_reminder`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_get_task_reminders`(
@@ -3322,7 +3374,7 @@ CREATE PROCEDURE `sp_get_task_reminders`(
         WHERE `task_assign_id` = p_task_assign_id AND `deleted_at` IS NULL
         ORDER BY `created_at` DESC;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_get_task_reminders`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_report_coordinator_events_summary`(
@@ -3366,7 +3418,7 @@ CREATE PROCEDURE `sp_report_coordinator_events_summary`(
         WHERE e.`coordinator_id` = p_coordinator_id
         AND e.`deleted_at` IS NULL;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_report_coordinator_events_summary`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_report_event_details`(
@@ -3466,7 +3518,7 @@ CREATE PROCEDURE `sp_report_event_details`(
         ) rt ON e.`event_id` = rt.`event_id`
         WHERE e.`event_id` = p_event_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_report_event_details`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_report_tasks_summary`(
@@ -3513,7 +3565,7 @@ CREATE PROCEDURE `sp_report_tasks_summary`(
         WHERE ta.`coordinator_id` = p_coordinator_id
         AND ta.`deleted_at` IS NULL;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_report_tasks_summary`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_report_task_details`(
@@ -3570,7 +3622,7 @@ CREATE PROCEDURE `sp_report_task_details`(
         LEFT JOIN `Ratings_Task_Assign` r ON ta.`task_assign_id` = r.`task_assign_id` AND r.`deleted_at` IS NULL
         WHERE ta.`task_assign_id` = p_task_assign_id;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_report_task_details`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_report_suppliers_summary`(
@@ -3607,7 +3659,7 @@ CREATE PROCEDURE `sp_report_suppliers_summary`(
         AND ta.`deleted_at` IS NULL
         AND ta.`user_assign_id` IS NOT NULL;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_report_suppliers_summary`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_report_supplier_details`(
@@ -3773,7 +3825,7 @@ CREATE PROCEDURE `sp_report_supplier_details`(
             
             @total_services AS total_services;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE PROCEDURE `sp_report_supplier_details`
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `sp_admin_dashboard_stats`$$
@@ -3805,50 +3857,49 @@ CREATE PROCEDURE `sp_admin_dashboard_stats`()
             (SELECT COUNT(*) FROM `Service_Requests` WHERE `status` = 'APPROVED' AND `deleted_at` IS NULL) as approved_suggestions,
             (SELECT COUNT(*) FROM `Service_Requests` WHERE `status` = 'REJECTED' AND `deleted_at` IS NULL) as rejected_suggestions;
     END$$
-DELIMITER ;
-
+DELIMITER ; -- END CREATE PROCEDURE `sp_admin_dashboard_stats`
 
 DELIMITER $$
 CREATE PROCEDURE `sp_approve_service_request`(
-    IN `p_request_id` INT,
-    IN `p_service_name` VARCHAR(100) CHARSET utf8mb4 COLLATE utf8mb4_general_ci,
-    IN `p_description` TEXT,
-    IN `p_admin_email` VARCHAR(100)
-)
-DETERMINISTIC MODIFIES SQL DATA SQL SECURITY DEFINER 
-BEGIN 
-    DECLARE v_service_id INT;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
+        IN `p_request_id` INT,
+        IN `p_service_name` VARCHAR(100) ,
+        IN `p_description` TEXT,
+        IN `p_admin_email` VARCHAR(100)
+    )
+    DETERMINISTIC MODIFIES SQL DATA SQL SECURITY DEFINER 
+    BEGIN 
+        DECLARE v_service_id INT;
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
 
-    START TRANSACTION;
+        START TRANSACTION;
 
-    UPDATE `Service_Requests` SET `status` = 'APPROVED' WHERE `id` = p_request_id;
+        UPDATE `Service_Requests` SET `status` = 'APPROVED' WHERE `id` = p_request_id;
 
-    INSERT INTO `Services` (`service_name`, `description`) 
-        VALUES (p_service_name, p_description);
-    SET v_service_id = LAST_INSERT_ID();
+        INSERT INTO `Services` (`service_name`, `description`) 
+            VALUES (p_service_name, p_description);
+        SET v_service_id = LAST_INSERT_ID();
 
-    INSERT INTO `Notifications` (`user_id`, `type`, `title`, `message`) 
-    VALUES (1,
-        'create_service', 
-        'خدمة جديدة (من مقترح)', 
-        CONCAT(
-            'لقد قام المدير "', COALESCE(p_admin_email, 'admin'), '" بإعتماد خدمة جديدة\n' , 
-            'رقم الخدمة: ', v_service_id, '\n',
-            'إسم الخدمة: ', p_service_name, '\n',
-            'الوصف: ', COALESCE(p_description, 'لا يوجد وصف')
-        )
-    );
-    
-    INSERT INTO `Notifications` (`user_id`, `type`, `title`, `message`) 
-        SELECT `user_id`, 'create_service', 'إضافة خدمة جديدة', CONCAT('تم إضافة خدمة جديدة بالنظام: "', p_service_name, '"') 
-        FROM `Users` WHERE `deleted_at` IS NULL AND `user_id` != 1;
+        INSERT INTO `Notifications` (`user_id`, `type`, `title`, `message`) 
+        VALUES (1,
+            'create_service', 
+            'خدمة جديدة (من مقترح)', 
+            CONCAT(
+                'لقد قام المدير "', COALESCE(p_admin_email, 'admin'), '" بإعتماد خدمة جديدة\n' , 
+                'رقم الخدمة: ', v_service_id, '\n',
+                'إسم الخدمة: ', p_service_name, '\n',
+                'الوصف: ', COALESCE(p_description, 'لا يوجد وصف')
+            )
+        );
+        
+        INSERT INTO `Notifications` (`user_id`, `type`, `title`, `message`) 
+            SELECT `user_id`, 'create_service', 'إضافة خدمة جديدة', CONCAT('تم إضافة خدمة جديدة بالنظام: "', p_service_name, '"') 
+            FROM `Users` WHERE `deleted_at` IS NULL AND `user_id` != 1;
 
-    COMMIT;
+        COMMIT;
 
-    SELECT * FROM `Services` WHERE `service_id` = v_service_id;
-END$$
-DELIMITER ;
+        SELECT * FROM `Services` WHERE `service_id` = v_service_id;
+    END$$
+DELIMITER ; -- END CREATE PROCEDURE `sp_approve_service_request`
 
 
 
@@ -3865,7 +3916,7 @@ CREATE TRIGGER `trg_users_before_insert` BEFORE INSERT ON `Users`
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Email already exists for another user';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_users_before_insert` BEFORE INSERT ON `Users`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_users_before_update` BEFORE UPDATE ON `Users`
@@ -3877,7 +3928,7 @@ CREATE TRIGGER `trg_users_before_update` BEFORE UPDATE ON `Users`
             END IF;
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_users_before_update` BEFORE UPDATE ON `Users`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_users_after_update` AFTER UPDATE ON `Users`
@@ -3887,7 +3938,7 @@ CREATE TRIGGER `trg_users_after_update` AFTER UPDATE ON `Users`
             CALL sp_delete_all_events_of_coordinator(OLD.user_id);
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_users_after_update` AFTER UPDATE ON `Users`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_clientss_before_update` BEFORE UPDATE ON `Clients`
@@ -3904,7 +3955,7 @@ CREATE TRIGGER `trg_clientss_before_update` BEFORE UPDATE ON `Clients`
             END IF;
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_clientss_before_update` BEFORE UPDATE ON `Clients`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_supplier_services_before_insert` BEFORE INSERT ON `Supplier_Services`
@@ -3914,7 +3965,7 @@ CREATE TRIGGER `trg_supplier_services_before_insert` BEFORE INSERT ON `Supplier_
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'User is not a supplier';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_supplier_services_before_insert` BEFORE INSERT ON `Supplier_Services`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_supplier_services_before_update` BEFORE UPDATE ON `Supplier_Services`
@@ -3924,7 +3975,7 @@ CREATE TRIGGER `trg_supplier_services_before_update` BEFORE UPDATE ON `Supplier_
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'User is not a supplier';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_supplier_services_before_update` BEFORE UPDATE ON `Supplier_Services`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_task_assigns_before_insert` BEFORE INSERT ON `Task_Assigns`
@@ -3944,20 +3995,25 @@ CREATE TRIGGER `trg_task_assigns_before_insert` BEFORE INSERT ON `Task_Assigns`
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'لا يمكن أن يكون تاريخ الانتهاء قبل تاريخ البدء';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_task_assigns_before_insert` BEFORE INSERT ON `Task_Assigns`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_task_assigns_before_update` BEFORE UPDATE ON `Task_Assigns`
     FOR EACH ROW
     BEGIN
-        IF OLD.`date_due` IS NOT NULL AND OLD.`date_due` < CURDATE() THEN
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'لا يمكن تحديث المهام في الماضي';
+        IF OLD.`date_due` IS NOT NULL AND OLD.`date_due` > CURDATE() THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'لا يمكن تحديث المهام المنتهية أو الفائتة';
         END IF;
-        IF NEW.`date_due` IS NOT NULL AND NEW.`date_start` IS NOT NULL AND NEW.`date_due` <= NEW.`date_start` THEN
+        IF (
+            NEW.`date_due` IS NOT NULL AND 
+            NEW.`date_start` IS NOT NULL AND 
+            NEW.`date_due` <= NEW.`date_start` AND 
+            (OLD.`date_start` != NEW.`date_start` OR OLD.`date_due` != NEW.`date_due`)
+        ) THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'لا يمكن أن يكون تاريخ الانتهاء قبل تاريخ البدء';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_task_assigns_before_update` BEFORE UPDATE ON `Task_Assigns`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_task_assigns_after_update` AFTER UPDATE ON `Task_Assigns`
@@ -3968,7 +4024,7 @@ CREATE TRIGGER `trg_task_assigns_after_update` AFTER UPDATE ON `Task_Assigns`
             UPDATE `Ratings_Task_Assign` SET `deleted_at` = NOW() WHERE `task_assign_id` = OLD.task_assign_id;
         END IF; 
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_task_assigns_after_update` AFTER UPDATE ON `Task_Assigns`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_ratings_task_assign_before_insert` BEFORE INSERT ON `Ratings_Task_Assign`
@@ -3978,7 +4034,7 @@ CREATE TRIGGER `trg_ratings_task_assign_before_insert` BEFORE INSERT ON `Ratings
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rater must be a coordinator';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_ratings_task_assign_before_insert` BEFORE INSERT ON `Ratings_Task_Assign`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_ratings_task_assign_before_update` BEFORE UPDATE ON `Ratings_Task_Assign`
@@ -3988,7 +4044,7 @@ CREATE TRIGGER `trg_ratings_task_assign_before_update` BEFORE UPDATE ON `Ratings
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rater must be a coordinator';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_ratings_task_assign_before_update` BEFORE UPDATE ON `Ratings_Task_Assign`
 
 DELIMITER $$
 CREATE TRIGGER `trg_events_before_insert` BEFORE INSERT ON `Events`
@@ -3998,7 +4054,7 @@ CREATE TRIGGER `trg_events_before_insert` BEFORE INSERT ON `Events`
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Coordinator must have coordinator role';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_events_before_insert` BEFORE INSERT ON `Events`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_events_before_update` BEFORE UPDATE ON `Events`
@@ -4009,7 +4065,7 @@ CREATE TRIGGER `trg_events_before_update` BEFORE UPDATE ON `Events`
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Coordinator must have coordinator role';
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_events_before_update` BEFORE UPDATE ON `Events`
 
 DELIMITER $$ 
 CREATE TRIGGER `trg_events_after_update` AFTER UPDATE ON `Events`
@@ -4019,7 +4075,7 @@ CREATE TRIGGER `trg_events_after_update` AFTER UPDATE ON `Events`
             UPDATE `Task_Assigns` SET `deleted_at` = NOW() WHERE `event_id` = OLD.event_id;
         END IF;
     END $$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_events_after_update` AFTER UPDATE ON `Events`
 
 DELIMITER $$
 CREATE TRIGGER `trg_task_assigns_before_delete` BEFORE DELETE ON `Task_Assigns`
@@ -4028,7 +4084,7 @@ CREATE TRIGGER `trg_task_assigns_before_delete` BEFORE DELETE ON `Task_Assigns`
         -- حذف تذكيرات المهمة (soft delete) قبل حذف المهمة
         UPDATE `Task_Reminders` SET `deleted_at` = NOW() WHERE `task_assign_id` = OLD.`task_assign_id`;
     END$$
-DELIMITER ;
+DELIMITER ; -- END CREATE TRIGGER `trg_task_assigns_before_delete` BEFORE DELETE ON `Task_Assigns`
 
 
 
@@ -4038,7 +4094,7 @@ DELIMITER ;
 
 
 -- تفعيل المجدول إذا كان مغلقاً
-SET GLOBAL event_scheduler = ON;
+-- SET GLOBAL event_scheduler = ON;
 
 -- مراقبة المناسبات (انتهاء أو اقتراب الانتهاء)
 DELIMITER $$

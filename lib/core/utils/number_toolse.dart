@@ -1,6 +1,6 @@
 class NumberTools 
 {
-  static num tryParse<K>(value, {num defaultV = 0, K? keys})
+  static num tryParse<K>(dynamic value, {num defaultV = 0, K? keys})
   {
     if(value is num) return value;
     if(value is String) {
@@ -22,7 +22,7 @@ class NumberTools
     return defaultV;
   }
 
-  static num parse<K>(value, {num? defaultV, K? keys}) 
+  static num parse<K>(dynamic value, {num? defaultV, K? keys}) 
   {
     if(value is num) return value;
     if(value is String){
@@ -44,9 +44,9 @@ class NumberTools
     throw Exception('Invalid value: $value');
   }
 
-  static double parseDouble<K>(value, {double? defaultV, K? keys}) => parse(value, defaultV: defaultV, keys: keys).toDouble();
-  static int parseInt<K>(value, {int? defaultV, K? keys}) => parse(value, defaultV: defaultV, keys: keys).toInt();
+  static double parseDouble<K>(dynamic value, {double? defaultV, K? keys}) => parse(value, defaultV: defaultV, keys: keys).toDouble();
+  static int parseInt<K>(dynamic value, {int? defaultV, K? keys}) => parse(value, defaultV: defaultV, keys: keys).toInt();
 
-  static double tryParseDouble<K>(value, {double defaultV = 0.0, K? keys}) => tryParse(value, defaultV: defaultV, keys: keys).toDouble();
-  static int tryParseInt<K>(value, {int defaultV = 0, K? keys}) => tryParse(value, defaultV: defaultV, keys: keys).toInt();
+  static double tryParseDouble<K>(dynamic value, {double defaultV = 0.0, K? keys}) => tryParse(value, defaultV: defaultV, keys: keys).toDouble();
+  static int tryParseInt<K>(dynamic value, {int defaultV = 0, K? keys}) => tryParse(value, defaultV: defaultV, keys: keys).toInt();
 }

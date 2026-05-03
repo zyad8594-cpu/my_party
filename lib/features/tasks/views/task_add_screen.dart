@@ -106,6 +106,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                           curve: Curves.easeInOutBack,
                           child: showRest
                               ? Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(height: 32),
@@ -120,7 +121,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                                     _buildReminderCard(context, isEditing),
                                   ],
                                 )
-                              : const SizedBox(width: double.infinity),
+                              : const SizedBox.shrink(),
                         );
                       }),
                       const SizedBox(height: 40),

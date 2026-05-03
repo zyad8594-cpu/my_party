@@ -1,5 +1,9 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/utils/bool_toolse.dart' show BoolTools;
+import '../../../../core/utils/number_toolse.dart' show NumberTools;
+import '../../../../core/utils/string_toolse.dart' show StrTools;
+
 class ServiceRequest extends Equatable {
   final int id;
   final int supplierId;
@@ -31,18 +35,18 @@ class ServiceRequest extends Equatable {
 
   factory ServiceRequest.fromJson(Map<String, dynamic> json) {
     return ServiceRequest(
-      id: json['id'] ?? 0,
-      supplierId: json['supplier_id'] ?? 0,
-      supplierName: json['supplier_name'] ?? 'غير معروف',
-      serviceName: json['service_name'] ?? '',
-      description: json['description'],
-      status: json['status'] ?? 'PENDING',
-      isDeleted: json['is_deleted'] ?? false,
-      createdAt: json['created_at'],
-      supplierEmail: json['supplier_email'],
-      supplierPhone: json['supplier_phone'],
-      supplierAddress: json['supplier_address'],
-      supplierImg: json['supplier_img'],
+      id: NumberTools.tryParseInt(json, keys: ['id']),
+      supplierId: NumberTools.tryParseInt(json, keys: ['supplier_id', 'supplierId', 'user_id', 'userId']),
+      supplierName: StrTools.tryParse(json, keys: ['supplier_name', 'supplierName'], defaultV: 'غير معروف'),
+      serviceName: StrTools.tryParse(json, keys: ['service_name', 'serviceName'], ),
+      description: StrTools.tryParse(json, keys: ['description'], ),
+      status: StrTools.tryParse(json, keys: ['status'], defaultV: 'PENDING'),
+      isDeleted: BoolTools.tryParse(json, keys: ['is_deleted', 'isDeleted'], defaultV: false),
+      createdAt: StrTools.tryParse(json, keys: ['created_at', 'createdAt'], ),
+      supplierEmail: StrTools.tryParse(json, keys: ['supplier_email', 'supplierEmail'], ),
+      supplierPhone: StrTools.tryParse(json, keys: ['supplier_phone', 'supplierPhone'], ),
+      supplierAddress: StrTools.tryParse(json, keys: ['supplier_address', 'supplierAddress'], ),
+      supplierImg: StrTools.tryParse(json, keys: ['supplier_img', 'supplierImg'], ),
     );
   }
 

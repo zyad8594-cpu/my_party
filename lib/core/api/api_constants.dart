@@ -18,26 +18,34 @@ class ApiConstants
 // Endpoints
 class ApiEndpoints
 {
-  static const String login = '/auth/login';
-  static const String register = '/auth/register';
-  static const String users = '/users';
-  static const String userChangePassword = '/users/change-password';
-  static const String usersByRole = '/users/role';
-  static const String coordinators = '/coordinators';
-  static const String suppliers = '/suppliers';
-  static const String services = '/services';
-  static const String serviceRequests = '/services/requests';
-  static const String clients = '/clients';
-  static const String events = '/events';
-  static const String tasks = '/tasks';
-  static const String incomes = '/incomes';
-  static const String notifications = '/users/notifications';
-  static const String notificationsReadAll = '/users/notifications-read-all';
-  static const String notificationsClear = '/users/notifications-clear';
-  static const String dashboard = '/dashboard';
-  static const String systemUsers = '/system_users';
+  static const  auth = '/auth',
+                login = '$auth/login',
+                register = '$auth/register';
+  static const  users = '/users',
+                fcmToken = '$users/fcm-token',
+                userChangePassword = '$users/change-password',
+                usersByRole = '$users/role',
+                notifications = '$users/notifications',
+                notificationsReadAll = '$users/notifications-read-all',
+                notificationsClear = '$users/notifications-clear';
 
-  static const String suppliersWithCoordinatorRating = '/suppliers/rated-by-coordinator';
+  static const coordinators = '/coordinators';
+  static const  suppliers = '/suppliers',
+                suppliersWithCoordinatorRating = '$suppliers/rated-by-coordinator';
+
+  static const  services = '/services',
+                serviceRequests = '$services/requests';
+  
+  static const clients = '/clients';
+  static const events = '/events';
+  static const tasks = '/tasks';
+  static const incomes = '/incomes';
+  
+  
+  static const dashboard = '/dashboard';
+  static const systemUsers = '/system_users';
+
+  
 }
 
 // SharedPreferences keys

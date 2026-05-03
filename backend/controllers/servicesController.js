@@ -175,6 +175,7 @@ exports.getAllRequests = async (req, res) => {
             WHERE sr.deleted_at IS NULL
             ORDER BY sr.created_at DESC
         `);
+        console.log(rows);
         return ApiResponse.success(res, rows);
     } catch (err) {
         console.error('Error in getAllRequests:', err);
@@ -197,6 +198,8 @@ exports.getMyRequests = async (req, res) => {
             WHERE sr.supplier_id = ? AND sr.deleted_at IS NULL
             ORDER BY sr.created_at DESC
         `, [req.user.user_id]);
+        if(rows.is_deleted != undefined && rows.is_deleted != null) rows.is_deleted = Boolean(rows.is_deleted);
+        console.log(rows);
         return ApiResponse.success(res, rows);
     } catch (err) {
         console.error('Error in getMyRequests:', err);
@@ -253,4 +256,6 @@ exports.withdrawRequest = async (req, res) => {
         return ApiResponse.error(res, err.message);
     }
 };
+
+
 

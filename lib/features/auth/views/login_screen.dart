@@ -128,12 +128,13 @@ class LoginScreen extends GetView<AuthController>
 
                             // حقل البريد الإلكتروني
                             TextFormField(
+                              controller: controller.emailController,
                               decoration: const InputDecoration(
                                 labelText: 'البريد الإلكتروني',
                                 hintText: 'example@mail.com',
                                 prefixIcon: Icon(Icons.email_outlined),
                               ),
-                              initialValue: controller.email.value,
+                              // initialValue: controller.email.value,
                               keyboardType: TextInputType.emailAddress,
                               onSaved: (val) => controller.email.value = val ?? controller.email.value,
                               onChanged: (val) => controller.email.value = val,
@@ -143,7 +144,8 @@ class LoginScreen extends GetView<AuthController>
 
                             // حقل كلمة المرور
                             Obx(() => TextFormField(
-                              key: controller.formAuthKey,
+                              controller: controller.passwordController,
+                              // key: controller.formAuthKey,
                               decoration: AppFormWidgets.passwordFieldDecoration(
                                 label: 'كلمة المرور',
                                 hintText: '••••••••',
@@ -153,7 +155,7 @@ class LoginScreen extends GetView<AuthController>
                                 context: context,
                               ),
                               obscureText: !controller.isPasswordVisible.value,
-                              initialValue: controller.password.value,
+                              // initialValue: controller.password.value,
                               onSaved: (val) => controller.password.value = val ?? controller.password.value,
                               onChanged: (val) => controller.password.value = val,
                               validator: (val)=> MyPValidator.password(controller.password.value, 6),

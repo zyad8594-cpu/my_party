@@ -35,10 +35,10 @@ class NotificationModel {
   /// socketError: دالة callback يتم استدعاؤها في حالة حدوث خطأ أو لم يكن نوع البيانات (Map) أو (List)
   static 
   // StreamController<NotificationModel> 
-  addTo(
+  void addTo(
     // StreamController<NotificationModel> procedure, 
     {
-      data,
+      dynamic data,
       void Function(dynamic, dynamic)? socketError,
       required void Function(NotificationModel) call
   }){

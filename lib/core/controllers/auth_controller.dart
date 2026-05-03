@@ -29,10 +29,10 @@ class AuthController extends GetxController
   final selectedDialCode = '+967'.obs;
 
   Rx<User> get user => AuthService.user;
-  // final emailController = TextEditingController();
-  // final passwordController = TextEditingController();
-  // final nameController = TextEditingController();
-  // final phoneController = TextEditingController();
+  final emailController = TextEditingController(text: '');
+  final passwordController = TextEditingController(text: '');
+  final nameController = TextEditingController(text: '');
+  final phoneController = TextEditingController(text: '');
 
   final selectedRole = 'coordinator'.obs;
   final profileImage = Rx<File?>(null);
@@ -86,17 +86,17 @@ class AuthController extends GetxController
   Future<void> login() async 
   {
     if(isLoading.value) return;
-    // // email.value = emailController.text;
-    // // password.value = passwordController.text;
-    // var contactMsg = MyPValidator.cocatMsg([
-    //   MyPValidator.email(email),
-    //   MyPValidator.password(password, 6),
+    email.value = emailController.text;
+    password.value = passwordController.text;
+    var contactMsg = MyPValidator.cocatMsg([
+      MyPValidator.email(email),
+      MyPValidator.password(password, 6),
       
-    // ]); 
-    // if(contactMsg != null)
-    // {
-    //   return MyPUtils.showSnackbar('خطأ', contactMsg, isError: true);
-    // }
+    ]); 
+    if(contactMsg != null)
+    {
+      return MyPUtils.showSnackbar('خطأ', contactMsg, isError: true);
+    }
 
     if(!_validateFormLogin()){
       isLoading.value = false;
@@ -138,10 +138,10 @@ class AuthController extends GetxController
 
   void register() async 
   {
-    // name.value = nameController.text;
-    // email.value = emailController.text;
-    // password.value = passwordController.text;
-    // phone.value = phoneController.text;
+    name.value = nameController.text;
+    email.value = emailController.text;
+    password.value = passwordController.text;
+    phone.value = phoneController.text;
 
     if(isLoading.value) return;
     var contactMsg = MyPValidator.cocatMsg([
@@ -323,10 +323,10 @@ class AuthController extends GetxController
     password.value = '';
     phone.value = '';
     
-    // nameController.clear();
-    // emailController.clear();
-    // passwordController.clear();
-    // phoneController.clear();
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    phoneController.clear();
     
     profileImage.value = null;
     selectedServiceIds.clear();

@@ -11,7 +11,7 @@ import '../../data/models/notification.dart' show NotificationModel;
 import '../api/auth_service.dart' show AuthService;
 import '../routes/app_routes.dart' show AppRoutes;
 
-
+/// خدمة مراقبة شاملة
 class SocketService extends GetxService {
   /// 1. تعريف الكائن الأساسي للـ Socket
   /// 
@@ -178,7 +178,7 @@ class Socket
   bool get connected => _socket.connected;
   String? get id => _socket.id;
 
-  Socket([opts])
+  Socket([dynamic opts])
   {
     if(opts is Map<String, dynamic>)
     {

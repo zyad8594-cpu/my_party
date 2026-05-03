@@ -29,7 +29,7 @@ class Coordinator extends User
   });
   
 
-  factory Coordinator.fromJson(json) {
+  factory Coordinator.fromJson(dynamic json) {
     return Coordinator(
       id: NumberTools.tryParseInt(json, keys: [
         'id', 'user_id', 'coordinator_id',

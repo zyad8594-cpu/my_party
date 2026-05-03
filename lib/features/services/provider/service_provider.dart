@@ -7,7 +7,7 @@ class ServiceProvider extends ApiProvider
 {
   ServiceProvider():super(Get.find<ApiService>());
 
-  Map<String, dynamic> getSingleResponse(response) {
+  Map<String, dynamic> getSingleResponse(dynamic response) {
     if (response is Map) {
       if (response.containsKey('data') && response['data'] is Map && (response['data'] as Map).containsKey('result')) {
         return Map<String, dynamic>.from(response['data']['result']);
@@ -26,7 +26,7 @@ class ServiceProvider extends ApiProvider
     return {};
   }
     
-  List<dynamic> getMultiResponse(response) {
+  List<dynamic> getMultiResponse(dynamic response) {
     return List<dynamic>.from(
       response['data'] ??
       response['result'] ??

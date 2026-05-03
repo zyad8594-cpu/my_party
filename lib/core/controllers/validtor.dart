@@ -3,6 +3,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 enum MyPValidOptios{
   required, onlyCapetal, onlySmall, email, password, phone, name
 }
+
 class MyPValidator {
 
   static String? _extractString(dynamic val) {
@@ -19,7 +20,7 @@ class MyPValidator {
   }
 
   // 1. التحقق من البريد الإلكتروني
-  static String? email([val]) 
+  static String? email([dynamic val]) 
   {
     final value = _extractString(val);
     for (var error = notEmptyWithTrim(value, 'البريد الإلكتروني'); error != null;) 
@@ -35,7 +36,7 @@ class MyPValidator {
   }
 
   // 2. التحقق من كلمة المرور (قوية: حروف وأرقام و8 رموز)
-  static String? password(val, [int len = 8]) 
+  static String? password(dynamic val, [int len = 8]) 
   {
     final value = _extractString(val);
     for (var error = notEmpty(value, 'كلمة المرور'); error != null;) 
@@ -50,7 +51,7 @@ class MyPValidator {
   }
 
   // 3. التحقق من رقم الهاتف (بفرض التنسيق الدولي أو المحلي 10 أرقام)
-  static String? phone([val]) 
+  static String? phone([dynamic val]) 
   {
     final value = _extractString(val);
     for (var error = notEmpty(value, 'رقم الهاتف'); error != null;) 
@@ -69,7 +70,7 @@ class MyPValidator {
   }
 
   // 4. التحقق من اسم المستخدم (حروف فقط، بدون أرقام أو رموز)
-  static String? name([val]) 
+  static String? name([dynamic val]) 
   {
     final value = _extractString(val);
     for (var error = notEmptyWithTrim(value, 'الاسم'); error != null; ) 
@@ -91,7 +92,7 @@ class MyPValidator {
   }
 
   // 5. التحقق من الحقول الفارغة العامة
-  static String? notEmpty([val, String fieldName = '']) 
+  static String? notEmpty([dynamic val, String fieldName = '']) 
   {
     final value = _extractString(val);
     return (value == null || value.isEmpty)?
@@ -101,19 +102,19 @@ class MyPValidator {
 
 
 
-  static String? notEmptyWithTrimL([val, String fieldName = '']) 
+  static String? notEmptyWithTrimL([dynamic val, String fieldName = '']) 
   {
     final value = _extractString(val);
     return notEmpty(value?.trimLeft(), fieldName);
   }
 
-  static String? notEmptyWithTrimR([val, String fieldName = '']) 
+  static String? notEmptyWithTrimR([dynamic val, String fieldName = '']) 
   {
     final value = _extractString(val);
     return notEmpty(value?.trimRight(), fieldName);
   }
 
-  static String? notEmptyWithTrim([val, String fieldName = '']) 
+  static String? notEmptyWithTrim([dynamic val, String fieldName = '']) 
   {
     final value = _extractString(val);
     return notEmpty(value?.trim(), fieldName);

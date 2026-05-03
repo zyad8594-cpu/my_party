@@ -114,12 +114,17 @@ class ServiceListScreen extends GetView<ServiceController> {
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                               child: Row(
-                                children: ['الكل', 'قيد المراجعة', 'معتمدة', 'مرفوضة'].map((filter) {
+                                children: ['الكل', 'قيد الإنتظار', 'معتمدة', 'مرفوضة'].map((filter) {
                                   final isSelected = controller.selectedRequestFilter.value == filter;
                                   return Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
                                     child: FilterChip(
-                                      label: Text(filter, style: TextStyle(color: isSelected ? AppColors.white : AppColors.textSubtitle.getByBrightness(brightness))),
+                                      label: Text(
+                                        filter, 
+                                        style: TextStyle(
+                                          color: isSelected ? AppColors.white : AppColors.textSubtitle.getByBrightness(brightness)
+                                        ),
+                                      ),
                                       selected: isSelected,
                                       onSelected: (_) => controller.selectedRequestFilter.value = filter,
                                       selectedColor: AppColors.primary.getByBrightness(brightness),

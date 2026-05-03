@@ -2,25 +2,56 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api_constants.dart';
 
+/// خدمة لتخزين رابط الخادم وتفعيل الاشعارات
+/// 
+/// يتم استخدامها لتخزين رابط الخادم وتفعيل الاشعارات
 class ConfigService extends GetxService {
-  final String _baseUrlKey = 'api_base_url';
-  final String _notifEnabledKey = 'notifications_enabled';
-  final String _notifSoundKey = 'notification_sound_enabled';
-  final String _notifSoundPathKey = 'notification_sound_path';
-  final String _notifSoundNameKey = 'notification_sound_name';
-  final String _notifSoundTypeKey = 'notification_sound_type';
-  
+  /// مفتاح تخزين رابط الخادم
+  final _baseUrlKey = 'api_base_url';
+  /// مفتاح تخزين تفعيل الاشعارات
+  final _notifEnabledKey = 'notifications_enabled';
+  /// مفتاح تخزين تفعيل صوت الاشعارات
+  final _notifSoundKey = 'notification_sound_enabled';
+  /// مفتاح تخزين مسار صوت الاشعارات
+  final _notifSoundPathKey = 'notification_sound_path';
+  /// مفتاح تخزين اسم صوت الاشعارات
+  final _notifSoundNameKey = 'notification_sound_name';
+  /// مفتاح تخزين نوع صوت الاشعارات
+  final _notifSoundTypeKey = 'notification_sound_type';
+  /// - متغير لإدارة تخزين البيانات
   SharedPreferences? _prefs;
   
+  /// متغير لتخزين رابط الخادم
   final baseUrl = ''.obs;
+  /// متغير لتخزين تفعيل الاشعارات
   final notificationsEnabled = true.obs;
+  /// متغير لتخزين تفعيل صوت الاشعارات
   final notificationSoundEnabled = true.obs;
+  /// متغير لتخزين مسار صوت الاشعارات
   final notificationSoundPath = ''.obs;
+  /// متغير لتخزين اسم صوت الاشعارات
   final notificationSoundName = 'Default'.obs;
-  final notificationSoundType = 'default'.obs; // default, system, custom
+  /// متغير لتخزين نوع صوت الاشعارات
+  /// 
+  /// الأنواع هي: 
+  /// - default
+  /// - system
+  /// - custom
+  final notificationSoundType = 'default'.obs;
 
-  Future<ConfigService> init() async {
+  /// دالة لتهيئة الخدمة
+  /// 
+  /// المعاملات:
+  /// 
+  /// لا يوجد
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<ConfigService>`: 
+  Future<ConfigService> init() async 
+  {
     _prefs = await SharedPreferences.getInstance();
+    
     baseUrl.value = _prefs?.getString(_baseUrlKey) ?? ApiConstants.baseUrl;
     notificationsEnabled.value = _prefs?.getBool(_notifEnabledKey) ?? true;
     notificationSoundEnabled.value = _prefs?.getBool(_notifSoundKey) ?? true;
@@ -30,26 +61,69 @@ class ConfigService extends GetxService {
     return this;
   }
 
-  Future<void> updateBaseUrl(String newUrl) async {
+  /// دالة لتحديث رابط الخادم
+  /// 
+  /// المعاملات:
+  /// 
+  /// - `String` newUrl: رابط الخادم الجديد
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<void>`: 
+  Future<void> updateBaseUrl(String newUrl) async 
+  {
     if (newUrl.isEmpty) return;
-    if (newUrl.endsWith('/')) {
+    if (newUrl.endsWith('/')) 
+    {
       newUrl = newUrl.substring(0, newUrl.length - 1);
     }
     baseUrl.value = newUrl;
     await _prefs?.setString(_baseUrlKey, newUrl);
   }
 
-  Future<void> setNotificationsEnabled(bool value) async {
+  /// دالة لتفعيل الاشعارات
+  /// 
+  /// المعاملات:
+  /// 
+  /// - `bool` value: تفعيل الاشعارات
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<void>`: 
+  Future<void> setNotificationsEnabled(bool value) async 
+  {
     notificationsEnabled.value = value;
     await _prefs?.setBool(_notifEnabledKey, value);
   }
 
-  Future<void> setNotificationSoundEnabled(bool value) async {
+  /// دالة لتفعيل صوت الاشعارات
+  /// 
+  /// المعاملات:
+  /// 
+  /// - `bool` value: تفعيل صوت الاشعارات
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<void>`: 
+  Future<void> setNotificationSoundEnabled(bool value) async 
+  {
     notificationSoundEnabled.value = value;
     await _prefs?.setBool(_notifSoundKey, value);
   }
 
-  Future<void> setNotificationSound(String path, String name, String type) async {
+  /// دالة لتحديد صوت الاشعارات
+  /// 
+  /// المعاملات:
+  /// 
+  /// - `String` path: مسار صوت الاشعارات
+  /// - `String` name: اسم صوت الاشعارات
+  /// - `String` type: نوع صوت الاشعارات
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<void>`: 
+  Future<void> setNotificationSound(String path, String name, String type) async 
+  {
     notificationSoundPath.value = path;
     notificationSoundName.value = name;
     notificationSoundType.value = type;
@@ -58,3 +132,4 @@ class ConfigService extends GetxService {
     await _prefs?.setString(_notifSoundTypeKey, type);
   }
 }
+

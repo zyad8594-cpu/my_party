@@ -33,45 +33,75 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
-  firebase_core: any
-  firebase_messaging: any
-  # State management and routing
-  get: ^4.7.3
-  dio: ^5.4.0
-  shared_preferences: ^2.5.4
-  flutter_secure_storage: ^9.0.0
-  image_picker: ^1.1.0
-  cached_network_image: ^3.3.0
-  # Local storage for simple settings (theme,local)
-  get_storage: ^2.1.1
-  # UI enhancements
-  google_fonts: ^6.3.0
-  intl: ^0.20.2
-  uuid: ^4.5.1
-  fl_chart: ^1.0.0
-  flutter_svg: ^2.0.7
-  # js: ^0.6.7
-  window_manager: ^0.3.3
-  connectivity_plus: ^5.0.1
-  mysql1: 
-  path_provider: ^2.1.2
+  # ===============================
+  # 1. واجهات المستخدم وتحسيناتها (UI Enhancements)
+  # ===============================
+  # cupertino_icons: ^1.0.8         # أيقونات بنمط iOS
+  google_fonts: ^8.1.0            # دعم خطوط Google
+  # flutter_svg: ^2.0.7             # عرض رسوميات SVG
+  # dropdown_button2: ^3.0.0        # قائمة منسدلة مخصصة
+  fl_chart: ^1.0.0                # رسوم بيانية متقدمة
+  # window_manager: ^0.3.3          # التحكم بنافذة التطبيق (دعم سطح المكتب)
+
+  # ===============================
+  # 2. خدمات Firebase (Backend)
+  # ===============================
+  firebase_core: any               # تهيئة Firebase الأساسية
+  firebase_auth: ^6.4.0           # التوثيق والمستخدمين
+  cloud_firestore: ^6.3.0         # قاعدة البيانات Firestore
+  firebase_messaging: any         # الإشعارات الفورية (Push Notifications)
+
+  # ===============================
+  # 3. إدارة الحالة والتوجيه (State Management & Routing)
+  # ===============================
+  get: ^4.7.3                     # إدارة الحالة، التوجيه، وحقن التبعيات
+  equatable: ^2.0.8               # مقارنة الكائنات بسهولة (لمكتبة GetX أو BLoC)
+
+  # ===============================
+  # 4. تخزين البيانات محلياً (Local Storage)
+  # ===============================
+  shared_preferences: ^2.5.4      # تخزين بسيط (مفاتيح/قيم)
+  # flutter_secure_storage: ^9.0.0  # تخزين آمن للتوكنات والبيانات الحساسة
+  # get_storage: ^2.1.1             # تخزين سريع وقائم على GetX
+  # path_provider: ^2.1.2           # تحديد المسارات المناسبة (التطبيق، المخبأ، ...)
+
+  # ===============================
+  # 5. الشبكات والاتصالات (Networking & Connectivity)
+  # ===============================
+  dio: ^5.4.0                     # عميل HTTP قوي (بديل عن http)
+  connectivity_plus: ^7.1.1       # مراقبة حالة الاتصال بالإنترنت
+  socket_io_client: ^3.0.0        # عميل Socket.IO للإشعارات الفورية
+
+  # ===============================
+  # 6. التعامل مع الملفات والوسائط (Files & Media)
+  # ===============================
+  image_picker: ^1.1.0            # اختيار الصور من المعرض أو الكاميرا
+  cached_network_image: ^3.3.0    # تحميل وتخزين مؤقت للصور من الشبكة
+  file_picker: ^11.0.2            # اختيار أي ملف من الجهاز
+  audioplayers: ^6.6.0            # تشغيل الملفات الصوتية
+  flutter_ringtone_player: ^4.0.0+4 # تشغيل نغمات النظام
+  flutter_system_ringtones: ^0.0.6 # التحكم برنات النظام (للإشعارات)
+
+  # ===============================
+  # 7. إنشاء التقارير والطباعة والمشاركة (Reports & Sharing)
+  # ===============================
+  pdf: ^3.12.0                    # إنشاء ملفات PDF
+  printing: ^5.14.3               # طباعة PDF أو مستندات
+  excel: ^4.0.1                   # قراءة وكتابة ملفات Excel
+  csv: ^6.0.0                     # معالجة ملفات CSV
+  share_plus: ^12.0.2             # مشاركة النصوص والملفات مع تطبيقات أخرى
+  url_launcher: ^6.3.0            # فتح روابط ورسائل بريدية ورقم الهاتف
+
+  # ===============================
+  # 8. أدوات مساعدة (Utilities)
+  # ===============================
+  intl: ^0.20.2                   # تنسيق الأرقام والتواريخ
+  uuid: ^4.5.1                    # توليد معرفات فريدة (UUID)
+  flutter_phoenix: ^1.1.1         # إعادة تشغيل التطبيق بالكامل (للمقاومة)
+  mysql1:                         # الاتصال المباشر بقاعدة بيانات MySQL (يُستخدم بحذر)
+
   flutter_localizations:
     sdk: flutter
-  flutter_phoenix: ^1.1.1
-  dropdown_button2: ^3.0.0
-  equatable: ^2.0.8
-  pdf: ^3.12.0
-  printing: ^5.14.3
-  csv: ^6.0.0
-  share_plus: ^12.0.1
-  excel: ^4.0.1
-  url_launcher: ^6.3.0
-  socket_io_client: ^3.0.0
-  audioplayers: ^6.6.0
-  flutter_ringtone_player: ^4.0.0+4
-  file_picker: ^11.0.2
-  flutter_system_ringtones: ^0.0.6
 
 dev_dependencies:
   flutter_test:
@@ -82,7 +112,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4 # استخدم أحدث إصدار متوفر
 
 # For information on the generic Dart part of this file, see the

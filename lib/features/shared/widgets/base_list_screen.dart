@@ -5,6 +5,7 @@ import '../../../../core/components/widgets/myp_list_view_widget.dart';
 import '../../../../core/components/widgets/search_box_widget.dart';
 import '../../../../core/components/widgets/loading_widget.dart';
 import '../../../../core/themes/app_colors.dart';
+import 'scroll_to_top_fab.dart';
 import '../controllers/base_controller.dart';
 
 abstract class BaseListScreen<T, C extends BaseGenericController<T>> extends GetView<C> 
@@ -34,7 +35,22 @@ abstract class BaseListScreen<T, C extends BaseGenericController<T>> extends Get
     return Scaffold(
       appBar: CustomAppBar(title: title),
       backgroundColor: AppColors.background.getByBrightness(brightness),
-      floatingActionButton: buildFloatingActionButton(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            ScrollToTopFab(
+              showScrollToTop: controller.showScrollToTop,
+              onPressed: controller.scrollToTop,
+            ),
+            const Spacer(),
+            buildFloatingActionButton(context) ?? const SizedBox.shrink(),
+          ],
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: () => controller.fetchAll(force: true),
         child: SafeArea(

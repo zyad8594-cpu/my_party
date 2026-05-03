@@ -18,7 +18,9 @@ analyzer:
     invalid_use_of_protected_member: ignore
     library_prefixes: ignore
     must_be_immutable: ignore
+    strict_top_level_inference: ignore
     unnecessary_this: ignore
+    use_null_aware_elements: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

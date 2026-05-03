@@ -18,13 +18,15 @@ function initSocket(server) {
     });
 
     io.on('connection', (socket) => {
-        console.log('📱 جهاز جديد متصل عبر WebSocket. المعرف:', socket.id);
+        
 
         socket.on('join-room', (userId) => {
+            let userData = {id: socket.id,};
             if (userId) {
                 socket.join(`user_${userId}`);
-                console.log(`👤 User ${userId} joined room: user_${userId}`);
+                userData[`👤 User ${userId} joined room`] = `user_${userId}`;
             }
+            console.log('📱 جهاز جديد متصل عبر WebSocket.:', userData);
         });
 
         socket.on('disconnect', () => {

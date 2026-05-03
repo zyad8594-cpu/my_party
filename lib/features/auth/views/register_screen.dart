@@ -142,7 +142,7 @@ class RegisterScreen extends GetView<AuthController> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         TextField(
-                          controller: TextEditingController(text: controller.name.value),
+                          controller: controller.nameController,
                           onChanged: (val) => controller.name.value = val,
                           decoration: const InputDecoration(
                             labelText: 'الاسم الكامل',
@@ -151,7 +151,8 @@ class RegisterScreen extends GetView<AuthController> {
                         ),
                         const SizedBox(height: 20),
                         TextField(
-                          controller: TextEditingController(text: controller.email.value),
+                          controller: controller.emailController,
+                        
                           onChanged: (val) => controller.email.value = val,
                           keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
@@ -162,7 +163,7 @@ class RegisterScreen extends GetView<AuthController> {
                         ),
                         const SizedBox(height: 20),
                         TextField(
-                          controller: TextEditingController(text: controller.phone.value),
+                          controller: controller.phoneController,
                           textDirection: TextDirection.ltr,
                           onChanged: (val) => controller.phone.value = val,
                           keyboardType: TextInputType.phone,
@@ -177,7 +178,7 @@ class RegisterScreen extends GetView<AuthController> {
                         const SizedBox(height: 20),
                         Obx(
                           () => TextField(
-                            controller: TextEditingController(text: controller.password.value),
+                            controller: controller.passwordController,
                             onChanged: (val) => controller.password.value = val,
                             obscureText: !controller.isPasswordVisible.value,
                             decoration: AppFormWidgets.passwordFieldDecoration(

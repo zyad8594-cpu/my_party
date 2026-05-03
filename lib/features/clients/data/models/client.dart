@@ -33,7 +33,7 @@ class Client extends User
     'address': address,
   });
 
-  factory Client.fromJson(json) {
+  factory Client.fromJson(dynamic json) {
     return Client(
       id: NumberTools.tryParseInt(json, keys: [
         'id', 'user_id', 'client_id',

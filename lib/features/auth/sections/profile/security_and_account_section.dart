@@ -195,7 +195,7 @@ class SecurityAndAccountSection extends GetView<AuthController> {
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     itemCount: accounts.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (c, _) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final acc = accounts[index];
                       final isActive = acc['id'] == controller.user.value.id;

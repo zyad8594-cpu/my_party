@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 // import '../../../core/api/auth_service.dart';
+import '../../../core/utils/date_formatter.dart' show DateFormatter;
 import '../../../features/auth/controller/auth_controller.dart' show AuthController;
 import '../../../features/notifications/data/models/notification.dart' show NotificationModel;
 import '../../../features/notifications/controller/notification_controller.dart' show NotificationController;
@@ -11,6 +11,7 @@ import '../../../core/components/widgets/loading_widget.dart' show LoadingWidget
 import '../../../core/components/empty_state_widget.dart' show EmptyStateWidget;
 import '../../../core/components/custom_app_bar.dart' show CustomAppBar;
 import '../../../core/components/myp_scrollbar.dart';
+import '../../shared/widgets/scroll_to_top_fab.dart';
 import '../../../core/themes/app_colors.dart' show AppColors;
 
 
@@ -24,30 +25,113 @@ class NotificationListScreen extends GetView<NotificationController>
   {
     controller.fetchNotifications();
     final brightness = Theme.of(context).brightness;
-    return Scaffold(
-      backgroundColor: AppColors.background.getByBrightness(brightness),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        final bool handled = controller.cancelSelectionMode();
+        if (!handled) {
+          Navigator.of(context).pop(result);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.background.getByBrightness(brightness),
       appBar: CustomAppBar(
         title: 'الإشعارات',
+        showLogoutButton: false,
         showBackButton: true,
-        beforeActions: [
-          IconButton(
-            icon: Icon(
-              Icons.done_all_rounded,
-              color: AppColors.primary.getByBrightness(brightness),
-            ),
-            tooltip: 'تحديد الكل كمقروء',
-            onPressed: () => _showClearAllConfirm(brightness, isClear: false),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.delete_sweep_rounded,
-              color: AppColors.accent.getByBrightness(brightness),
-            ),
-            tooltip: 'مسح الكل',
-            onPressed: () => _showClearAllConfirm(brightness),
+        afterActions: [
+          
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert_rounded, color: AppColors.primary.getByBrightness(brightness)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: AppColors.surface.getByBrightness(brightness),
+            onSelected: (value)=> switch(value) {
+              'mark_all_read' => controller.startSelectionMode('mark_read', controller.filteredNotifications.map((n) => n.id).toList()),
+              'delete_all'=> controller.startSelectionMode('delete', controller.filteredNotifications.map((n) => n.id).toList()),
+              'logout' => authController.logout(),
+              _=> null
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'delete_all',
+                child: Row(
+                  children: [
+                    Icon(Icons.delete_forever_rounded, color: AppColors.accent.getByBrightness(brightness), size: 20),
+                    const SizedBox(width: 12),
+                    Text('حذف الكل', style: TextStyle(color: AppColors.textBody.getByBrightness(brightness))),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'mark_all_read',
+                child: Row(
+                  children: [
+                    Icon(Icons.done_all_rounded, color: AppColors.primary.getByBrightness(brightness), size: 20),
+                    const SizedBox(width: 12),
+                    Text('تمييز الكل كمقروءة', style: TextStyle(color: AppColors.textBody.getByBrightness(brightness))),
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout_rounded, color: AppColors.accent.getByBrightness(brightness), size: 20),
+                    const SizedBox(width: 12),
+                    Text('تسجيل الخروج', style: TextStyle(color: AppColors.textBody.getByBrightness(brightness))),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(width: 8),
         ],
+      ),
+      bottomNavigationBar: Obx(() {
+        if (!controller.isSelectionMode.value || controller.selectedNotificationIds.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        final bool isDelete = controller.selectionModeAction.value == 'delete';
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.surface.getByBrightness(brightness),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, -5),
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () => isDelete ? _showBulkDeleteConfirm(brightness) : _showBulkMarkReadConfirm(brightness),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDelete ? AppColors.accent.getByBrightness(brightness) : AppColors.primary.getByBrightness(brightness),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: Text(
+              isDelete 
+                  ? 'حذف المحدد (${controller.selectedNotificationIds.length})'
+                  : 'تمييز كمقروءة (${controller.selectedNotificationIds.length})',
+              style: const TextStyle(
+                color: AppColors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        );
+      }),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: ScrollToTopFab(
+        showScrollToTop: controller.showScrollToTop,
+        onPressed: controller.scrollToTop,
       ),
       body: RefreshIndicator(
         onRefresh: () async => controller.fetchNotifications(force: true),
@@ -128,24 +212,64 @@ class NotificationListScreen extends GetView<NotificationController>
                       ),
                     ),
         
-                    // 2. Sticky Status Tabs
+                    // 2. Sticky Status Tabs & Select All
                     SliverPersistentHeader(
                       pinned: true,
                       delegate: _StickyHeaderDelegate(
-                        minHeight: 50,
-                        maxHeight: 50,
+                        minHeight: 100, // Increased to accommodate select all
+                        maxHeight: 100,
                         child: Container(
-                          height: 50,
-                          alignment: Alignment.center,
                           color: AppColors.background.getByBrightness(brightness),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          child: Row(
+                          child: Column(
                             children: [
-                              _buildFilterTab('الكل', 'all', controller.filterStatus.value == 'all'),
-                              const SizedBox(width: 8),
-                              _buildFilterTab('غير مقروء', 'unread', controller.filterStatus.value == 'unread'),
-                              const SizedBox(width: 8),
-                              _buildFilterTab('مقروء', 'read', controller.filterStatus.value == 'read'),
+                              Container(
+                                height: 50,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                child: Row(
+                                  children: [
+                                    _buildFilterTab('الكل', 'all', controller.filterStatus.value == 'all'),
+                                    const SizedBox(width: 8),
+                                    _buildFilterTab('غير مقروء', 'unread', controller.filterStatus.value == 'unread'),
+                                    const SizedBox(width: 8),
+                                    _buildFilterTab('مقروء', 'read', controller.filterStatus.value == 'read'),
+                                  ],
+                                ),
+                              ),
+                              if (controller.isSelectionMode.value)
+                                Container(
+                                  height: 50,
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: AppColors.textSubtitle.getByBrightness(brightness).withValues(alpha: 0.1),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                        value: controller.selectedNotificationIds.length == notifications.length && notifications.isNotEmpty,
+                                        onChanged: (val) => controller.toggleSelectAll(notifications.map((n) => n.id).toList()),
+                                        activeColor: AppColors.primary.getByBrightness(brightness),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                      ),
+                                      const Text(
+                                        'تحديد الكل',
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '${controller.selectedNotificationIds.length} مختار',
+                                        style: TextStyle(
+                                          color: AppColors.primary.getByBrightness(brightness),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -171,7 +295,7 @@ class NotificationListScreen extends GetView<NotificationController>
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
                               final notification = notifications[index];
-                              return _buildNotificationCard(notification, brightness);
+                              return _buildNotificationCard(context, notification);
                             },
                             childCount: notifications.length,
                           ),
@@ -182,11 +306,13 @@ class NotificationListScreen extends GetView<NotificationController>
               );
         }),
       ),
+    ),
     );
   }
 
-  Widget _buildNotificationCard(NotificationModel notification, Brightness brightness) 
+  Widget _buildNotificationCard(BuildContext context, NotificationModel notification) 
   {
+    final brightness = Theme.of(context).brightness;
     final bool isUnread = !notification.isRead;
     final iconData = _getNotificationIcon(notification.type);
     final statusColor = _getNotificationColor(notification.type, brightness);
@@ -210,14 +336,28 @@ class NotificationListScreen extends GetView<NotificationController>
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            controller.markAsRead(notification.id);
-            Get.to(() => NotificationDetailScreen(notification: notification));
+            if (controller.isSelectionMode.value) {
+              controller.toggleNotificationSelection(notification.id);
+            } else {
+              controller.markAsRead(notification.id);
+              Get.to(() => NotificationDetailScreen(notification: notification));
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (controller.isSelectionMode.value)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12, top: 8),
+                    child: Checkbox(
+                      value: controller.selectedNotificationIds.contains(notification.id),
+                      onChanged: (val) => controller.toggleNotificationSelection(notification.id),
+                      activeColor: AppColors.primary.getByBrightness(brightness),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    ),
+                  ),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -258,12 +398,44 @@ class NotificationListScreen extends GetView<NotificationController>
                           ),
                           const SizedBox(width: 4),
 
-                          IconButton(
-                            icon: Icon(Icons.close_rounded, color: AppColors.textSubtitle.getByBrightness(brightness), size: 20),
-                            onPressed: () => controller.deleteNotification(notification.id),
-                            constraints: const BoxConstraints(),
-                            padding: EdgeInsets.zero,
-                          ),
+                          if (!controller.isSelectionMode.value)
+                            PopupMenuButton<String>(
+                              icon: Icon(Icons.more_vert_rounded, color: AppColors.textSubtitle.getByBrightness(brightness), size: 20),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              color: AppColors.surface.getByBrightness(brightness),
+                              onSelected: (value) {
+                                if (value == 'mark_read') {
+                                  controller.markAsRead(notification.id);
+                                } else if (value == 'delete') {
+                                  _showSingleDeleteConfirm(notification.id, brightness);
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                if (isUnread)
+                                  PopupMenuItem(
+                                    value: 'mark_read',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.mark_email_read_rounded, color: AppColors.primary.getByBrightness(brightness), size: 20),
+                                        const SizedBox(width: 12),
+                                        Text('تمييز كمقروءة', style: TextStyle(color: AppColors.textBody.getByBrightness(brightness))),
+                                      ],
+                                    ),
+                                  ),
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.delete_outline_rounded, color: AppColors.accent.getByBrightness(brightness), size: 20),
+                                      const SizedBox(width: 12),
+                                      Text('حذف', style: TextStyle(color: AppColors.textBody.getByBrightness(brightness))),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
 
                         ],
                       ),
@@ -314,55 +486,41 @@ class NotificationListScreen extends GetView<NotificationController>
   }
 
   IconData _getNotificationIcon(String? type) {
-    switch (type?.toLowerCase()) {
-      case 'task':
-        return Icons.assignment_rounded;
-      case 'event':
-        return Icons.event_rounded;
-      case 'payment':
-        return Icons.payments_rounded;
-      case 'alert':
-        return Icons.warning_amber_rounded;
-      default:
-        return Icons.notifications_rounded;
-    }
+    return switch (type?.toLowerCase()) {
+      'task'=> Icons.assignment_rounded,
+      'event'=> Icons.event_rounded,
+      'payment'=> Icons.payments_rounded,
+      'alert'=> Icons.warning_amber_rounded,
+      _=> Icons.notifications_rounded,
+    };
   }
 
   Color _getNotificationColor(String? type, Brightness brightness) {
-    switch (type?.toLowerCase()) {
-      case 'task':
-        return AppColors.primary.getByBrightness(brightness);
-      case 'event':
-        return AppColors.info.getByBrightness(brightness);
-      case 'payment':
-        return AppColors.success.getByBrightness(brightness);
-      case 'alert':
-        return AppColors.accent.getByBrightness(brightness);
-      default:
-        return AppColors.primary.getByBrightness(brightness);
-    }
+    return switch (type?.toLowerCase()) {
+      'task'=> AppColors.primary.getByBrightness(brightness),
+      'event'=> AppColors.info.getByBrightness(brightness),
+      'payment'=> AppColors.success.getByBrightness(brightness),
+      'alert'=> AppColors.accent.getByBrightness(brightness),
+      _=> AppColors.primary.getByBrightness(brightness),
+    };
   }
 
   String _formatDate(String dateStr) {
-    try {
-      final date = DateTime.parse(dateStr);
-      return DateFormat('yyyy/MM/dd - hh:mm a', 'ar').format(date);
-    } catch (_) {
-      return dateStr;
-    }
+    return DateFormatter.formatDateTime(dateStr, fallback: dateStr);
   }
 
 
 
-  void _showClearAllConfirm(Brightness brightness, {bool isClear = true}) {
+
+
+  void _showSingleDeleteConfirm(int id, Brightness brightness) {
     Get.defaultDialog(
-      title: isClear ? 'مسح جميع الإشعارات' : 'تمييز الكل كمقروءة',
+      title: 'تأكيد الحذف',
       titleStyle: TextStyle(
         color: AppColors.primary.getByBrightness(brightness),
         fontWeight: FontWeight.bold,
       ),
-      middleText:
-          isClear ? 'هل أنت متأكد من رغبتك في حذف كل الإشعارات؟ لا يمكن التراجع عن هذه الخطوة.' : 'هل أنت متأكد من رغبتك في تمييز كل الإشعارات كمقروءة؟',
+      middleText: 'هل أنت متأكد من حذف هذا الإشعار؟',
       middleTextStyle: TextStyle(color: AppColors.textBody.getByBrightness(brightness)),
       backgroundColor: AppColors.surface.getByBrightness(brightness),
       radius: 24,
@@ -373,7 +531,7 @@ class NotificationListScreen extends GetView<NotificationController>
         child: ElevatedButton(
           onPressed: () {
             Get.back();
-            isClear ? controller.clearAll() : controller.markAllAsRead();
+            controller.deleteNotification(id);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.accent.getByBrightness(brightness),
@@ -382,8 +540,94 @@ class NotificationListScreen extends GetView<NotificationController>
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: Text(
-            isClear ? 'نعم، امسح الكل' : 'نعم، ميز الكل كمقروءة',
+          child: const Text(
+            'نعم، احذف',
+            style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      cancel: TextButton(
+        onPressed: () => Get.back(),
+        child: Text(
+          'إلغاء',
+          style: TextStyle(color: AppColors.textSubtitle.getByBrightness(brightness)),
+        ),
+      ),
+    );
+  }
+
+  void _showBulkDeleteConfirm(Brightness brightness) {
+    Get.defaultDialog(
+      title: 'تأكيد الحذف',
+      titleStyle: TextStyle(
+        color: AppColors.primary.getByBrightness(brightness),
+        fontWeight: FontWeight.bold,
+      ),
+      middleText: 'هل أنت متأكد من حذف الإشعارات (${controller.selectedNotificationIds.length}) المختارة؟',
+      middleTextStyle: TextStyle(color: AppColors.textBody.getByBrightness(brightness)),
+      backgroundColor: AppColors.surface.getByBrightness(brightness),
+      radius: 24,
+      contentPadding: const EdgeInsets.all(20),
+      confirm: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(top: 16),
+        child: ElevatedButton(
+          onPressed: () {
+            Get.back();
+            controller.deleteSelectedNotifications();
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.accent.getByBrightness(brightness),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: const Text(
+            'نعم، احذف المحدد',
+            style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      cancel: TextButton(
+        onPressed: () => Get.back(),
+        child: Text(
+          'إلغاء',
+          style: TextStyle(color: AppColors.textSubtitle.getByBrightness(brightness)),
+        ),
+      ),
+    );
+  }
+
+  void _showBulkMarkReadConfirm(Brightness brightness) {
+    Get.defaultDialog(
+      title: 'تأكيد التمييز',
+      titleStyle: TextStyle(
+        color: AppColors.primary.getByBrightness(brightness),
+        fontWeight: FontWeight.bold,
+      ),
+      middleText: 'هل أنت متأكد من تمييز الإشعارات (${controller.selectedNotificationIds.length}) كمقروءة؟',
+      middleTextStyle: TextStyle(color: AppColors.textBody.getByBrightness(brightness)),
+      backgroundColor: AppColors.surface.getByBrightness(brightness),
+      radius: 24,
+      contentPadding: const EdgeInsets.all(20),
+      confirm: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(top: 16),
+        child: ElevatedButton(
+          onPressed: () {
+            Get.back();
+            controller.markSelectedAsRead();
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary.getByBrightness(brightness),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: const Text(
+            'نعم، ميزها',
             style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
           ),
         ),

@@ -13,8 +13,8 @@ class NetworkController extends GetxController {
     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
-  void _updateConnectionStatus(ConnectivityResult result) {
-    if (result == ConnectivityResult.none) {
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    if (results.contains(ConnectivityResult.none)) {
       isConnected.value = false;
       if (Get.currentRoute != AppRoutes.networkError) {
         Get.toNamed(AppRoutes.networkError);

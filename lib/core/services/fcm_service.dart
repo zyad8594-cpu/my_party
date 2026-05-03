@@ -2,29 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:my_party/core/api/api_constants.dart';
+import 'package:my_party/data/models/user.dart';
 import '../api/auth_service.dart';
 import '../api/api_service.dart';
 import '../utils/utils.dart' show MyPUtils;
 
-// This function must be top-level or static (as required by FCM)
+/// دالة لمعالجة الاشعارات في الخلفية
+/// 
+/// يجب أن تكون هذه الوظيفة من المستوى الأعلى أو ثابتة (كما هو مطلوب من قبل FCM)
+/// 
+/// المعاملات:
+/// 
+/// - `RemoteMessage` message: رسالة الاشعارات
+/// 
+/// الإرجاع:
+/// 
+/// - `Future<void>`: 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `await Firebase.initializeApp()` if required by your platform.
+  /// إذا كنت ستستخدم خدمات Firebase أخرى في الخلفية، مثل Firestore,
+  /// تأكد من استدعاء `await Firebase.initializeApp()` إذا كان ذلك مطلوبًا من قبل المنصة.
   debugPrint("Handling a background message: ${message.messageId}");
 }
 
+/// خدمة لإدارة إشعارات Firebase Cloud Messaging
+/// 
+/// يتم استخدامها لإدارة إشعارات Firebase Cloud Messaging
 class FCMService extends GetxService {
+  /// متغير لتخزين إشعارات Firebase Cloud Messaging
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   
-  Future<FCMService> init() async {
-    // Request permissions for iOS/Android 13+
+  /// دالة لتهيئة الخدمة
+  /// 
+  /// المعاملات:
+  /// 
+  /// لا يوجد
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<FCMService>`: ترجع الخدمة بعد تهيئتها
+  Future<FCMService> init() async 
+  {
+    /// طلب أذونات iOS/Android 13+
     NotificationSettings settings = await _fcm.requestPermission(
       alert: true,
       badge: true,
       sound: true,
     );
 
+    /// التحقق من حالة الأذونات
     if (settings.authorizationStatus == AuthorizationStatus.authorized) 
     {
       debugPrint('✅ FCMService: إذن الإشعارات ممنوح.');
@@ -34,21 +60,24 @@ class FCMService extends GetxService {
       debugPrint('⚠️ FCMService: إذن الإشعارات مرفوض أو لم يُمنح.');
     }
 
-    // Show notification pop-up even when app is in the FOREGROUND (Android only)
+    /// إظهار إشعار منبثق حتى عندما يكون التطبيق في المقدمة (Android فقط)
     await _fcm.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
 
-    // Set the default FCM notification channel (must match AndroidManifest)
-    // This ensures notifications appear in the correct channel on Android 8+
+    /// تعيين قناة الإشعارات الافتراضية (يجب أن تتطابق مع AndroidManifest)
+    /// 
+    /// يضمن هذا ظهور الإشعارات في القناة الصحيحة على Android 8+
     await _fcm.setAutoInitEnabled(true);
 
-    // In-app (foreground) notification handling
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    /// معالجة الإشعارات داخل التطبيق (في المقدمة)
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) 
+    {
       debugPrint('🔔 FCMService: رسالة جديدة وهو مفتوح!');
-      if (message.notification != null) {
+      if (message.notification != null && AuthService.user.id == message.data['user_id']) 
+      {
         MyPUtils.showSnackbar(
           message.notification!.title ?? 'إشعار جديد',
           message.notification!.body ?? '',
@@ -57,34 +86,55 @@ class FCMService extends GetxService {
       }
     });
 
-    // When app is opened from a background notification
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    /// معالجة فتح التطبيق عبر الإشعار
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) 
+    {
       debugPrint('📲 FCMService: فتح التطبيق عبر الإشعار: ${message.notification?.title}');
       // Navigate to notifications screen if needed
       // Get.toNamed(AppRoutes.notifications);
     });
 
-    // Automatically update token on init if already logged in
-    if (AuthService.token.isNotEmpty) {
+    /// تحديث التوكن تلقائياً عند التهيئة إذا كان المستخدم مسجلاً
+    if (AuthService.token.isNotEmpty) 
+    {
       await updateTokenOnBackend();
     }
 
     return this;
   }
 
+  /// دالة للحصول على توكن FCM
+  /// 
+  /// المعاملات:
+  /// 
+  /// لا يوجد
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<String?>`: توكن FCM
   Future<String?> getToken() async {
-    try {
+    try 
+    {
       String? token = await _fcm.getToken();
-      debugPrint("FCM Token: $token");
+      debugPrint("توكن FCM: $token");
       return token;
     } 
     catch (e) 
     {
-      debugPrint("Error getting FCM token: $e");
+      debugPrint("خطأ في الحصول على توكن FCM: $e");
       return null;
     }
   }
 
+  /// دالة للحصول على نوع الجهاز
+  /// 
+  /// المعاملات:
+  /// 
+  /// لا يوجد
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `String`: نوع الجهاز
   String _getDeviceType() {
    if(GetPlatform.isAndroid)return 'android';
    if(GetPlatform.isIOS) return 'ios';
@@ -98,6 +148,15 @@ class FCMService extends GetxService {
    return 'unknown';
   }
 
+  /// دالة لتحديث توكن FCM في الخادم
+  /// 
+  /// المعاملات:
+  /// 
+  /// لا يوجد
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<void>`: 
   Future<void> updateTokenOnBackend() async 
   {
     if (AuthService.token.isEmpty) return;
@@ -107,7 +166,7 @@ class FCMService extends GetxService {
     {
       final apiService = Get.find<ApiService>();
       try {
-        final url = '${ApiConstants.baseUrl}/users/fcm-token';
+        final url = '${ApiConstants.baseUrl}${ApiEndpoints.fcmToken}';
         debugPrint("🚀 FCMService: جاري تسجيل التوكن على: $url");
         
         await apiService.post(url, data: {
@@ -122,7 +181,15 @@ class FCMService extends GetxService {
       }
     }
   }
-
+  /// دالة لمسح توكن FCM من الخادم
+  /// 
+  /// المعاملات:
+  /// 
+  /// لا يوجد
+  /// 
+  /// الإرجاع:
+  /// 
+  /// - `Future<void>`: 
   Future<void> clearTokenOnBackend() async {
     if (AuthService.token.isEmpty) return;
     
@@ -131,17 +198,21 @@ class FCMService extends GetxService {
     {
       final apiService = Get.find<ApiService>();
       try {
-        // Use custom data for delete if supported, but typically data is not used for delete.
-        // Backend expects it in the body for simplicity, so we use post or update the backend to use params.
-        // Actually our backend route is router.delete('/fcm-token', ... clientController.removeFCMToken);
-        // and removeFCMToken expects it in req.body.
-        // Standard Dio delete supports data.
-        await apiService.delete('${ApiConstants.baseUrl}/users/fcm-token', data: {'fcm_token': token});
-        debugPrint("FCM token successfully removed from backend");
+        /// استخدم بيانات مخصصة للحذف إذا كان ذلك مدعومًا، ولكن عادةً لا يتم استخدام البيانات للحذف.
+        /// 
+        /// يتوقع النظام الخلفي ذلك في نص الطلب لتبسيط الأمر، لذلك نستخدم طلب POST أو نقوم بتحديث النظام الخلفي لاستخدام المعاملات.
+        /// 
+        /// في الواقع، مسار النظام الخلفي لدينا هو router.delete('/fcm-token', ... clientController.removeFCMToken);
+        /// 
+        /// و removeFCMToken يتوقع ذلك في req.body.
+        /// 
+        /// و Dio delete القياسي يدعم البيانات.
+        await apiService.delete('${ApiConstants.baseUrl}${ApiEndpoints.fcmToken}', data: {'fcm_token': token});
+        debugPrint("تم حذف توكن FCM من الخادم بنجاح.");
       } 
       catch (e) 
       {
-        debugPrint("Failed to remove FCM token from backend: $e");
+        debugPrint("فشل حذف توكن FCM من الخادم: $e");
       }
     }
   }

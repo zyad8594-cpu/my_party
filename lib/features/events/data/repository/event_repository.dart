@@ -28,7 +28,7 @@ class EventRepository
     }
   }
 
-  Future<ApiResult<Event>> create(event) async 
+  Future<ApiResult<Event>> create(dynamic event) async 
   {
     try {
       final response = await _eventProvider.create(event);

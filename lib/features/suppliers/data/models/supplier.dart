@@ -83,7 +83,7 @@ class Supplier extends User
       'tasks': tasks,
     });
   
-  factory Supplier.fromJson(json) {
+  factory Supplier.fromJson(dynamic json) {
     return Supplier(
       id: NumberTools.tryParseInt(json, keys: [
         'id', 'supplier_id', 'user_id',

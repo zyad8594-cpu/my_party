@@ -92,7 +92,7 @@ class User extends Equatable {
   
   factory User.fromJsonDecode(dynamic json) => User.fromJson(Map<String, dynamic>.from(jsonDecode(json)));
   
-  factory User.fromJson(json) {
+  factory User.fromJson(dynamic json) {
     final allKeys = [
       'id', 'user_id', 'userId',
       'name', 'full_name', 'fullName', 

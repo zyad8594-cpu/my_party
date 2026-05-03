@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart' show ScrollController, TextEditingController;
+import 'package:flutter/widgets.dart' show ScrollController, TextEditingController, Curves;
 import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:get/get.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -39,6 +39,11 @@ class NotificationController extends GetxController
   final showHeader = true.obs;
   final scrollController = ScrollController();
   final searchController = TextEditingController();
+
+  final showScrollToTop = false.obs;
+  final isSelectionMode = false.obs;
+  final selectionModeAction = ''.obs; // 'delete' or 'mark_read'
+  final selectedNotificationIds = <int>{}.obs;
 
   List<NotificationModel> get filteredNotifications {
     final userId = AuthService.user.value.id;
@@ -115,12 +120,28 @@ class NotificationController extends GetxController
   void _scrollListener() {
     if (!scrollController.hasClients) return;
     try {
+      if (scrollController.offset > 300 && !showScrollToTop.value) {
+        showScrollToTop.value = true;
+      } else if (scrollController.offset <= 300 && showScrollToTop.value) {
+        showScrollToTop.value = false;
+      }
+
       if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
         if (showHeader.value) showHeader.value = false;
       } else if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
         if (!showHeader.value) showHeader.value = true;
       }
     } catch (_) {}
+  }
+
+  void scrollToTop() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
@@ -273,8 +294,103 @@ class NotificationController extends GetxController
       await _repository.delete(id);
       notifications.removeWhere((n) => n.id == id);
       notiNotReadCount.value = notifications.where((n) => !n.isRead).length;
+      selectedNotificationIds.remove(id);
     } catch (e) {
       MyPUtils.showSnackbar('Error', 'Failed to delete notification', isError: true);
+    }
+  }
+
+  void toggleSelectionMode() {
+    isSelectionMode.value = !isSelectionMode.value;
+    if (!isSelectionMode.value) {
+      cancelSelectionMode();
+    }
+  }
+
+  void startSelectionMode(String action, List<int> allIds) {
+    selectionModeAction.value = action;
+    isSelectionMode.value = true;
+    selectedNotificationIds.assignAll(allIds);
+  }
+
+  bool cancelSelectionMode() {
+    if(isSelectionMode.value){
+      isSelectionMode.value = false;
+      selectedNotificationIds.clear();
+      selectionModeAction.value = '';
+      return true;
+    }
+    return false;
+  }
+
+  void toggleNotificationSelection(int id) {
+    if (selectedNotificationIds.contains(id)) {
+      selectedNotificationIds.remove(id);
+    } else {
+      selectedNotificationIds.add(id);
+    }
+  }
+
+  void toggleSelectAll(List<int> allIds) {
+    if (selectedNotificationIds.length == allIds.length) {
+      selectedNotificationIds.clear();
+    } else {
+      selectedNotificationIds.assignAll(allIds);
+    }
+  }
+
+  Future<void> deleteSelectedNotifications() async {
+    if (selectedNotificationIds.isEmpty) return;
+
+    try {
+      isLoading.value = true;
+      final idsToDelete = selectedNotificationIds.toList();
+      
+      for (final id in idsToDelete) {
+        await _repository.delete(id);
+      }
+      
+      notifications.removeWhere((n) => idsToDelete.contains(n.id));
+      notiNotReadCount.value = notifications.where((n) => !n.isRead).length;
+      
+      selectedNotificationIds.clear();
+      isSelectionMode.value = false;
+      selectionModeAction.value = '';
+      
+      MyPUtils.showSnackbar('نجاح', 'تم مسح الإشعارات المحددة بنجاح');
+    } catch (e) {
+      MyPUtils.showSnackbar('خطأ', 'فشل في مسح الإشعارات: $e', isError: true);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> markSelectedAsRead() async {
+    if (selectedNotificationIds.isEmpty) return;
+
+    try {
+      isLoading.value = true;
+      final idsToMark = selectedNotificationIds.toList();
+      
+      for (final id in idsToMark) {
+        await _repository.markAsRead(id);
+        final index = notifications.indexWhere((n) => n.id == id);
+        if (index != -1) {
+          notifications[index] = notifications[index].copyWith(isRead: true);
+        }
+      }
+      
+      notiNotReadCount.value = notifications.where((n) => !n.isRead).length;
+      
+      selectedNotificationIds.clear();
+      isSelectionMode.value = false;
+      selectionModeAction.value = '';
+      
+      MyPUtils.showSnackbar('نجاح', 'تم تمييز الإشعارات المحددة كمقروءة بنجاح');
+    } catch (e) {
+      MyPUtils.showSnackbar('خطأ', 'فشل في مسح الإشعارات: $e', isError: true);
+    } finally {
+      isLoading.value = false;
     }
   }
 }

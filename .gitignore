@@ -68,8 +68,6 @@ lib_old_backend/
 sample_reports/
 screens_app/
 scripts/
-tmp_short_cut/
-web/
 web_admin/
 backend.zip
 backend2.zip
@@ -89,3 +87,12 @@ add_dires_to_gitignore
 generate_firebase_backend.py
 remove_dire_from_git
 lib_old_backup/
+analysis_2.txt
+analysis_options.yaml
+analysis_results.txt
+analysis.txt
+analyze_output.txt
+final_analysis_results.txt
+flutter_analysis.txt
+firebase-debug.log
+my_party_firebase_backend/

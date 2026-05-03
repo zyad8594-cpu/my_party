@@ -80,7 +80,7 @@ class TasksTab extends GetView<ReportsController> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('${task.cost.toStringAsFixed(0)} ر.س', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.green)),
+                Text('${task.cost.toStringAsFixed(0)} ر.ي', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.green)),
                 const SizedBox(height: 4),
                 InkWell(
                   onTap: () => controller.exportSingleItem('Task', task),
@@ -165,7 +165,7 @@ class TasksTab extends GetView<ReportsController> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.grey[50], // Notice: Hardcoded Color!
+              color: AppColors.transparent,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.grey[200]!),
             ),

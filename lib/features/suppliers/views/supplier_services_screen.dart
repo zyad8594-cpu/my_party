@@ -128,7 +128,13 @@ class SupplierServicesScreen extends GetView<SupplierController> {
           onPressed: () => _showProposeServiceDialog(context),
           backgroundColor: AppColors.primary.getByBrightness(brightness),
           icon: const Icon(Icons.add_circle_outline, color: AppColors.white),
-          label: const Text('اقتراح خدمة جديدة', style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+          label: const Text(
+            'اقتراح خدمة جديدة', 
+            style: TextStyle(
+              color: AppColors.white, 
+              fontWeight: FontWeight.bold
+            )
+          ),
         ),
         body: TabBarView(
           children: [

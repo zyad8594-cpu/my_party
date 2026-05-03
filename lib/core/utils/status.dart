@@ -19,7 +19,7 @@ class _StatusSelection {
     this.color,
   });
 
-  factory _StatusSelection.proccess([defaultV, isNullble = false]) 
+  factory _StatusSelection.proccess([dynamic defaultV, dynamic isNullble = false]) 
   {
     if(defaultV is _StatusSelection) return defaultV;
     defaultV = (defaultV is String)? defaultV.toUpperCase() : defaultV;
@@ -96,13 +96,13 @@ class _StatusSelection {
 
 extension StringStatusExtension on String? 
 {
-  Status status([defaultV]) {
+  Status status([dynamic defaultV]) {
     final self = _StatusSelection.proccess(this, _StatusSelection.proccess(defaultV, true));
     if(self.status != null) return self.status!;
     throw Exception('Invalid status: $this');
   }
 
-  Status tryStatus([defaultV = Status.OTHER]) 
+  Status tryStatus([dynamic defaultV = Status.OTHER]) 
   {
     return _StatusSelection.proccess(
       this, _StatusSelection.proccess(
@@ -118,14 +118,14 @@ extension StringStatusExtension on String?
 
 extension StatusExtension on Status? 
 {
-  String value([defaultV]) 
+  String value([dynamic defaultV]) 
   {
     final self = _StatusSelection.proccess(this, _StatusSelection.proccess(defaultV, true));
     if(self.value != null) return self.value!;
     throw Exception('Invalid status: $this'); 
   }
 
-  String tryValue([ defaultV ='PENDING' ]) 
+  String tryValue([dynamic defaultV ='PENDING' ]) 
   {
     return _StatusSelection.proccess(
       this, _StatusSelection.proccess(
@@ -138,13 +138,13 @@ extension StatusExtension on Status?
   }
 
 
-  String text([ defaultV]) {
+  String text([dynamic defaultV]) {
     final self = _StatusSelection.proccess(this, _StatusSelection.proccess(defaultV, true));
     if(self.text != null) return self.text!;
     throw Exception('Invalid status: $this'); 
   }
 
-  String tryText([ defaultV = 'أخرى']) 
+  String tryText([dynamic defaultV = 'أخرى']) 
   {
     return _StatusSelection.proccess(
       this, _StatusSelection.proccess(
@@ -155,13 +155,13 @@ extension StatusExtension on Status?
     ).text!;
   }
 
-  Color color(Brightness brightness, {defaultV}) {
+  Color color(Brightness brightness, {dynamic defaultV}) {
     final self = _StatusSelection.proccess(this, _StatusSelection.proccess(defaultV, true));
     if(self.color != null) return self.color!.getByBrightness(brightness);
     throw Exception('Invalid status: $this'); 
   }
 
-  Color tryColor(Brightness brightness, {defaultV =  AppColors.primary}) {
+  Color tryColor(Brightness brightness, {dynamic defaultV =  AppColors.primary}) {
    return _StatusSelection.proccess(
       this, _StatusSelection.proccess(
         defaultV, _StatusSelection(
@@ -195,7 +195,7 @@ extension StatusExtension on Status?
 
 class StatusTools
 {
-  static Status parse<K>(value, {defaultV, K? keys}){
+  static Status parse<K>(dynamic value, {dynamic defaultV, K? keys}){
     if(value is Map || value is List){
       
       for(var key in (keys is Iterable ? keys : [keys]))
@@ -211,7 +211,7 @@ class StatusTools
     throw Exception('Invalid status: $value');
   }
 
-  static Status tryParse<K>(value, {defaultV = Status.PENDING, K? keys}){
+  static Status tryParse<K>(dynamic value, {dynamic defaultV = Status.PENDING, K? keys}){
     return parse(value, defaultV: _StatusSelection.proccess(defaultV, _StatusSelection(status: Status.PENDING)).status, keys: keys);
   }
 

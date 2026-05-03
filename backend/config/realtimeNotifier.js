@@ -10,9 +10,15 @@ async function initRealtimeNotifier(sendNotificationToClients) {
     console.log('🔍 بدء تهيئة مراقب قاعدة البيانات...');
     
     const dbName = process.env.DB_NAME || 'my_party_4';
-
+    
     try {
+        const ssl = process.env.DB_SSL_CA? {
+                ssl: {ca: fs.readFileSync(process.env.DB_SSL_CA || '/home/zyad/Desktop/all devlopment projects/flutter/my_party/backend/ca.pem')}
+            }: {};
         const connectionConfig = {
+            port: process.env.DB_PORT || 3306,
+            ...ssl,
+            database: process.env.DB_NAME || 'my_party_4',
             host: process.env.DB_HOST || 'localhost',
             user: process.env.DB_USER || 'root',
             password: process.env.DB_PASSWORD || 'root',

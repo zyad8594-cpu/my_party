@@ -9,7 +9,9 @@ const ApiResponse = require('../utils/apiResponse');
  */
 exports.login = async (req, res) => {
     const { email, password } = req.body;
+    console.log('start login...');
     try {
+        
         const [users] = await pool.execute('CALL sp_login_user(?)', [email]);
         
         if (!users || !users[0] || !users[0][0]) {
@@ -44,9 +46,12 @@ exports.login = async (req, res) => {
         return ApiResponse.success(res, { token, user }, 'تم تسجيل الدخول بنجاح');
     } catch (err) {
         console.error('Login error:', err);
-        console.error({email: req.body.email})
         return ApiResponse.error(res, err.message);
     }
+    finally{
+        console.log('end login...');
+    }
+    
 };
 
 /**

@@ -1,7 +1,7 @@
 class MapTools 
 {
   static Map<MK, MV> tryParse<MK, MV, K>(
-    value, {
+    dynamic value, {
     Map<MK, MV> defaultV = const {}, 
     K? keys
   }) {
@@ -27,7 +27,7 @@ class MapTools
     return defaultV;
   }
 
-  static Map<MK, MV> parse<MK, MV, K>(value, {Map<MK, MV>? defaultV, K? keys})
+  static Map<MK, MV> parse<MK, MV, K>(dynamic value, {Map<MK, MV>? defaultV, K? keys})
   {
     if((value is Map || value is List) && keys != null)
     {

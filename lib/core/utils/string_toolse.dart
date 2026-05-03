@@ -41,7 +41,7 @@ extension StringToDate on String?
     );
   }
 
-  List<String> splitWithSeparators(separators) 
+  List<String> splitWithSeparators(dynamic separators) 
   {
     String str = this ?? '';
     if(separators is List<String>)
@@ -78,7 +78,7 @@ class StrTools
     if(textLines.length > lines) return '$prefix${textLines.map((line)=> take(line, (width ?? line.length), suffix: "")).join("\n")}$suffix';
     return value;
   }
-  static String tryParse<K>(value, {String defaultV = '', K? keys})
+  static String tryParse<K>(dynamic value, {String defaultV = '', K? keys})
   {
     try{ return value as String;}catch(e){null;}
     if(value is Map<String, dynamic>)
@@ -103,7 +103,7 @@ class StrTools
     return defaultV;
   }
 
-  static String parse<K>(value, {String? defaultV, K? keys}) 
+  static String parse<K>(dynamic value, {String? defaultV, K? keys}) 
   {
     try{ return value as String;}catch(e){null;}
     if(value is Map || value is List)

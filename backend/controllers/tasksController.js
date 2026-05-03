@@ -176,14 +176,14 @@ exports.updateTaskStatus = async (req, res) => {
     const { status, notes, adjustment_amount, adjustment_type } = req.body;
     let url_image = req.body.url_image? `${serverBasecPath}/${req.body.url_image}` : null;
     try {
-        await pool.execute('CALL sp_update_task_status(?, ?, ?, ?, ?, ?, ?)', [
+        await pool.execute('CALL sp_update_task_status(?, ?, ?, ?, ?)', [
             req.user.user_id, 
             +req.params.id, 
             status, 
             notes || null, 
             url_image || null,
-            adjustment_amount || 0,
-            adjustment_type || 'NONE'
+            // adjustment_amount || 0,
+            // adjustment_type || 'NONE'
         ]);
         return ApiResponse.success(res, null, 'تم تحديث حالة المهمة بنجاح');
     } catch (err) {

@@ -195,7 +195,7 @@ class ServiceController extends BaseGenericController<Service>
   List<dynamic> get displayedServiceRequests {
     final list = filteredServiceRequests;
     if (selectedRequestFilter.value == 'الكل') return list;
-    if (selectedRequestFilter.value == 'قيد المراجعة') return list.where((r) => r.status == 'PENDING').toList();
+    if (selectedRequestFilter.value == 'قيد الإنتظار') return list.where((r) => r.status == 'PENDING').toList();
     if (selectedRequestFilter.value == 'معتمدة') return list.where((r) => r.status == 'APPROVED').toList();
     if (selectedRequestFilter.value == 'مرفوضة') return list.where((r) => r.status == 'REJECTED' || r.status == 'CANCELLED').toList();
     return list;
@@ -264,11 +264,16 @@ class ServiceController extends BaseGenericController<Service>
 
   @override
   void onClose() {
-    scrollController.dispose();
     proposedScrollController.dispose();
-    nameController.dispose();
-    descriptionController.dispose();
-    supplierSearchController.dispose();
+
+    try {
+      nameController.dispose();
+      descriptionController.dispose();
+      supplierSearchController.dispose();
+    } catch (e) {
+      debugPrint('Error disposing controllers in ServiceController: $e');
+    }
+    
     super.onClose();
   }
 }
